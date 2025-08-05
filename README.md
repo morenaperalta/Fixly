@@ -312,9 +312,9 @@ Contributions are welcome! Please follow these guidelines:
 
 ## Author
 
-<table>
+<table align="center">
   <tr>
-    <td>
+    <td align="center">
       <a href="https://github.com/morenaperalta">
         <img src="https://github.com/morenaperalta.png" width="100px;" alt="Morena Peralta"/>
         <br />
