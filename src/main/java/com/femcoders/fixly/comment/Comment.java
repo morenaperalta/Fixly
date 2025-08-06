@@ -1,5 +1,6 @@
 package com.femcoders.fixly.comment;
 
+import com.femcoders.fixly.attachment.Attachment;
 import com.femcoders.fixly.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -25,13 +27,17 @@ public class Comment {
     public String content;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "comment_type", nullable = false)
     public CommentType commentType;
 
     @CreationTimestamp
+    @Column(name = "created_at")
     public LocalDateTime createdAt;
 
     @ManyToOne()
     @JoinColumn(name = "author")
     public User author;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private Set<Attachment> attachments;
 }
