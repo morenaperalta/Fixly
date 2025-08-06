@@ -2,9 +2,9 @@ package com.femcoders.fixly.attachment;
 
 import com.femcoders.fixly.comment.Comment;
 import com.femcoders.fixly.user.User;
+import com.femcoders.fixly.workorder.WorkOrder;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -33,6 +33,10 @@ public class Attachment {
    private User uploadedBy;
 
    @ManyToOne
-   @JoinColumn(name = "comment_id")
+   @JoinColumn(name = "comment_id", nullable = true)
    private Comment comment;
+
+   @ManyToOne
+   @JoinColumn(name = "workorder_id", nullable = true)
+    private WorkOrder workorder;
 }

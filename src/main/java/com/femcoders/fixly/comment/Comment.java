@@ -2,6 +2,7 @@ package com.femcoders.fixly.comment;
 
 import com.femcoders.fixly.attachment.Attachment;
 import com.femcoders.fixly.user.User;
+import com.femcoders.fixly.workorder.WorkOrder;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -38,6 +39,10 @@ public class Comment {
     @JoinColumn(name = "author")
     public User author;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "workorder_id", nullable = false)
+    private WorkOrder workorder;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Attachment> attachments;
 }
