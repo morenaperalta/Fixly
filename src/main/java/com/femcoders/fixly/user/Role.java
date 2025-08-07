@@ -1,8 +1,9 @@
 package com.femcoders.fixly.user;
 
 public enum Role {
+    DEFAULT,
     ADMIN,
-    USER,
+    CLIENT,
     TECHNICIAN,
     SUPERVISOR;
 
