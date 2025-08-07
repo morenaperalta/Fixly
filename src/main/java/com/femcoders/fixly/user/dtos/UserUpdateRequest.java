@@ -1,9 +1,8 @@
 package com.femcoders.fixly.user.dtos;
 
-import com.femcoders.fixly.user.Role;
 import jakarta.validation.constraints.*;
 
-public record AdminUpdateRequest(
+public record UserUpdateRequest(
         @Size(max = 100, message = "Username must be a maximum of 100 characters long")
         String username,
 
@@ -21,8 +20,6 @@ public record AdminUpdateRequest(
         String lastName,
 
         @Size(max = 100, message = "Company must be a maximum of 100 characters long")
-        String company,
-
-        Role role
+        String company
 ) {
 }
