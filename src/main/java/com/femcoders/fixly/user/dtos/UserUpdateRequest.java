@@ -9,10 +9,6 @@ public record UserUpdateRequest(
         @Email(message = "Email not valid", regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
         String email,
 
-        @Min(value = 8, message = "Password must contain a minimum of 8 characters")
-        @Pattern(message = "Password must contain a number, one uppercase letter, one lowercase letter and one special character", regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=.])(?=\\S+$).{8,}$")
-        String password,
-
         @Size(max = 100, message = "Firstname must be a maximum of 100 characters long")
         String firstName,
 
