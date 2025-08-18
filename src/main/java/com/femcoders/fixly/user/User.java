@@ -48,7 +48,6 @@ public class User {
     private String company;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Role role;
 
     @CreationTimestamp
