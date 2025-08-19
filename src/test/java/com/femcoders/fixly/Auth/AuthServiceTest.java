@@ -2,6 +2,7 @@ package com.femcoders.fixly.Auth;
 
 import com.femcoders.fixly.auth.AuthService;
 import com.femcoders.fixly.auth.dtos.RegistrationRequest;
+import com.femcoders.fixly.exception.EntityAlreadyExistsException;
 import com.femcoders.fixly.security.jwt.JwtService;
 import com.femcoders.fixly.user.User;
 import com.femcoders.fixly.user.UserRepository;
@@ -80,6 +81,17 @@ class AuthServiceTest {
             verify(userRepository, times(1)).existsByEmail(registrationRequest.email());
             verify(userRepository, times(1)).save(any(User.class));
             verify(passwordEncoder, times(1)).encode(registrationRequest.password());
+        }
+
+        @Test
+        @DisplayName("Should throw exception when username already exists")
+        void register_whenUsernameExists_throwsException() {
+
+            when(userRepository.existsByUsername(registrationRequest.username())).thenReturn(true);
+
+            EntityAlreadyExistsException exception = assertThrows(EntityAlreadyExistsException.class, () -> authService.register(registrationRequest));
+
+            assertEquals("User with username User1 already exists", exception.getMessage());
         }
     }
 }
