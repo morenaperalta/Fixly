@@ -3,10 +3,6 @@ package com.femcoders.fixly.user.dtos;
 import com.femcoders.fixly.user.User;
 
 public class UserMapper {
-    public static User userRegistrationToEntity(UserRegistrationRequest request) {
-        return User.builder().username(request.username().trim()).email(request.email().trim()).password(request.password()).firstName(request.firstName().trim()).lastName(request.lastName().trim()).company(request.company().trim()).build();
-    }
-
     public static User userUpdateToEntity(UserUpdateRequest request){
         return User.builder().username(request.username().trim()).email(request.email().trim()).firstName(request.firstName().trim()).lastName(request.lastName().trim()).company(request.company().trim()).build();
     }

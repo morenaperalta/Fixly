@@ -1,8 +1,8 @@
-package com.femcoders.fixly.user.dtos;
+package com.femcoders.fixly.auth.dtos;
 
 import jakarta.validation.constraints.*;
 
-public record UserRegistrationRequest(
+public record RegistrationRequest(
         @NotBlank(message = "Username is required")
         @Size(max = 100, message = "Username must be a maximum of 100 characters long")
         String username,

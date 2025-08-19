@@ -1,7 +1,9 @@
 package com.femcoders.fixly.auth;
 
+import com.femcoders.fixly.auth.dtos.JwtResponse;
+import com.femcoders.fixly.auth.dtos.LoginRequest;
 import com.femcoders.fixly.security.jwt.JwtService;
-import com.femcoders.fixly.user.dtos.UserRegistrationRequest;
+import com.femcoders.fixly.auth.dtos.RegistrationRequest;
 import com.femcoders.fixly.user.dtos.UserResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +24,14 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@Valid @RequestBody UserRegistrationRequest request) {
+    public ResponseEntity<UserResponse> register(@Valid @RequestBody RegistrationRequest request) {
         UserResponse userResponse = authService.register(request);
         return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 
-
+    @PostMapping("/login")
+    public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest request) {
+        JwtResponse jwtResponse = authService.login(request);
+        return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
+    }
 }

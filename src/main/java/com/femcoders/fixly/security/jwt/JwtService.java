@@ -1,31 +1,41 @@
 package com.femcoders.fixly.security.jwt;
 
-
 import com.femcoders.fixly.security.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
-    private final String JWT_SECRET_KEY = "bkV9EMLKTTg8RgsAdkVfWCDiwJoVAsVqb6CFncfc6ms=";
-    private final Long JWT_EXPIRATION = 1800000L;
+    @Value("${jwt.secret-key}")
+    private String secretKey;
+
+    @Value("${jwt.expiration}")
+    private Long expiration;
+
+    private static final String NO_ROLE = "NO_ROLE";
 
     public String generateToken(CustomUserDetails userDetail) {
-        return buildToken(userDetail, JWT_EXPIRATION);
+        return buildToken(userDetail, expiration);
     }
 
     private String buildToken(CustomUserDetails userDetail, long jwtExpiration) {
         String roles = userDetail.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
+
+        if (roles.isEmpty()) {
+            roles = NO_ROLE;
+        }
 
         return Jwts
                 .builder()
@@ -42,7 +52,8 @@ public class JwtService {
     }
 
     public String extractRole(String token) {
-        return extractAllClaims(token).get("role", String.class);
+        String role = extractAllClaims(token).get("role", String.class);
+        return (role == null || role.isEmpty()) ? NO_ROLE : role;
     }
 
     public boolean isValidToken(String token) {
@@ -64,7 +75,7 @@ public class JwtService {
     }
 
     private SecretKey getSignKey() {
-        byte[] bytes = Decoders.BASE64.decode(JWT_SECRET_KEY);
+        byte[] bytes = secretKey.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(bytes);
     }
 }

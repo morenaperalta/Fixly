@@ -33,3 +33,7 @@ cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
   api-key: ${CLOUDINARY_API_KEY}
   api-secret: ${CLOUDINARY_API_SECRET}
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY:Rml4bHlBcHBsaWNhdGlvblNlY3VyZUpXVFNlY3JldEtleTIwMjVGZW1Db2RlcnM=}
+  expiration: ${JWT_EXPIRATION:1800000}

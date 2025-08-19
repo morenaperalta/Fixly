@@ -1,12 +1,20 @@
 package com.femcoders.fixly.auth;
 
+import com.femcoders.fixly.auth.dtos.AuthMapper;
+import com.femcoders.fixly.auth.dtos.JwtResponse;
+import com.femcoders.fixly.auth.dtos.LoginRequest;
 import com.femcoders.fixly.exception.EntityAlreadyExistsException;
+import com.femcoders.fixly.security.CustomUserDetails;
+import com.femcoders.fixly.security.jwt.JwtService;
 import com.femcoders.fixly.user.User;
 import com.femcoders.fixly.user.UserRepository;
 import com.femcoders.fixly.user.dtos.UserMapper;
-import com.femcoders.fixly.user.dtos.UserRegistrationRequest;
+import com.femcoders.fixly.auth.dtos.RegistrationRequest;
 import com.femcoders.fixly.user.dtos.UserResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +23,30 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    public UserResponse register(UserRegistrationRequest request){
-        if(Boolean.TRUE.equals(userRepository.existsByUsername(request.username()))){
+    public UserResponse register(RegistrationRequest request){
+        if(userRepository.existsByUsername(request.username())){
             throw new EntityAlreadyExistsException(User.class.getSimpleName(), "username", request.username());
         }
-        if(Boolean.TRUE.equals(userRepository.existsByEmail(request.email()))){
+        if(userRepository.existsByEmail(request.email())){
             throw new EntityAlreadyExistsException(User.class.getSimpleName(), "email", request.email());
         }
-        User user = UserMapper.userRegistrationToEntity(request);
+        User user = AuthMapper.registrationToEntity(request);
         user.setPassword(passwordEncoder.encode(request.password()));
         User registeredUser = userRepository.save(user);
         return UserMapper.userResponseToDto(registeredUser);
+    }
+
+    public JwtResponse login(LoginRequest request) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.username(), request.password())
+        );
+
+        CustomUserDetails userDetail = (CustomUserDetails) authentication.getPrincipal();
+        String token = jwtService.generateToken(userDetail);
+
+        return new JwtResponse(token);
     }
 }
