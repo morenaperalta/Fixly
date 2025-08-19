@@ -92,6 +92,21 @@ class AuthServiceTest {
             EntityAlreadyExistsException exception = assertThrows(EntityAlreadyExistsException.class, () -> authService.register(registrationRequest));
 
             assertEquals("User with username User1 already exists", exception.getMessage());
+
+            verify(userRepository, never()).save(any());
+        }
+
+        @Test
+        @DisplayName("Should throw exception when email already exists")
+        void register_whenEmailExists_throwsException() {
+
+            when(userRepository.existsByEmail(registrationRequest.email())).thenReturn(true);
+
+            EntityAlreadyExistsException exception = assertThrows(EntityAlreadyExistsException.class, () -> authService.register(registrationRequest));
+
+            assertEquals("User with email user1@email.com already exists", exception.getMessage());
+
+            verify(userRepository, never()).save(any());
         }
     }
 }
