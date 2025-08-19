@@ -149,5 +149,21 @@ class AuthServiceTest {
             verify(authenticationManager).authenticate(any());
             verify(jwtService, never()).generateToken(any());
         }
+
+        @Test
+        @DisplayName("Should throw BadCredentialsException when password is invalid")
+        void login_whenInvalidPassword_throwsBadCredentialsException() {
+
+            LoginRequest loginRequest = new LoginRequest("User1", "wrongPassword");
+
+            when(authenticationManager.authenticate(any())).thenThrow(new BadCredentialsException("Invalid credentials"));
+
+            BadCredentialsException exception = assertThrows(BadCredentialsException.class, () -> authService.login(loginRequest));
+
+            assertEquals("Invalid credentials", exception.getMessage());
+
+            verify(authenticationManager).authenticate(any());
+            verify(jwtService, never()).generateToken(any());
+        }
     }
 }
