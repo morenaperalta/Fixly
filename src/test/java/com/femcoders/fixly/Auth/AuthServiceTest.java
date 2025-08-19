@@ -1,8 +1,11 @@
 package com.femcoders.fixly.Auth;
 
 import com.femcoders.fixly.auth.AuthService;
+import com.femcoders.fixly.auth.dtos.JwtResponse;
+import com.femcoders.fixly.auth.dtos.LoginRequest;
 import com.femcoders.fixly.auth.dtos.RegistrationRequest;
 import com.femcoders.fixly.exception.EntityAlreadyExistsException;
+import com.femcoders.fixly.security.CustomUserDetails;
 import com.femcoders.fixly.security.jwt.JwtService;
 import com.femcoders.fixly.user.User;
 import com.femcoders.fixly.user.UserRepository;
@@ -16,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,36 +38,34 @@ class AuthServiceTest {
     private AuthenticationManager authenticationManager;
     @Mock
     private JwtService jwtService;
+    @Mock
+    private Authentication authentication;
+    @Mock
+    private CustomUserDetails userDetails;
 
     @InjectMocks
     private AuthService authService;
 
     private RegistrationRequest registrationRequest;
+    private User savedUser;
 
     @BeforeEach
     void setUp() {
-        registrationRequest = new RegistrationRequest(
-                "User1",
-                "user1@email.com",
-                "Password123!",
-                "FirstName",
-                "LastName",
-                "Company"
-        );
+        registrationRequest = new RegistrationRequest("User1", "user1@email.com", "Password123!", "FirstName", "LastName", "Company");
+
+        savedUser = new User(1L, "User1", "user1@email.com", "encodedPassword", "FirstName", "LastName", "Company", null, null, null);
     }
 
     @Nested
     @DisplayName("Register")
-    class RegisterTests{
+    class RegisterTests {
         @Test
         @DisplayName("Should register user correctly when request is valid")
-        void register_whenCorrectRequest_returnsUserResponse(){
+        void register_whenCorrectRequest_returnsUserResponse() {
 
             when(passwordEncoder.encode(registrationRequest.password())).thenReturn("encodedPassword");
             when(userRepository.existsByUsername(registrationRequest.username())).thenReturn(false);
             when(userRepository.existsByEmail(registrationRequest.email())).thenReturn(false);
-
-            User savedUser = new User(1L, registrationRequest.username(), registrationRequest.email(), "encodedPassword", registrationRequest.firstName(), registrationRequest.lastName(), registrationRequest.company(), null, null, null);
 
             when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
@@ -79,8 +81,8 @@ class AuthServiceTest {
 
             verify(userRepository, times(1)).existsByUsername(registrationRequest.username());
             verify(userRepository, times(1)).existsByEmail(registrationRequest.email());
-            verify(userRepository, times(1)).save(any(User.class));
             verify(passwordEncoder, times(1)).encode(registrationRequest.password());
+            verify(userRepository, times(1)).save(any(User.class));
         }
 
         @Test
@@ -107,6 +109,28 @@ class AuthServiceTest {
             assertEquals("User with email user1@email.com already exists", exception.getMessage());
 
             verify(userRepository, never()).save(any());
+        }
+    }
+
+    @Nested
+    @DisplayName("Login Tests")
+    class LoginTests {
+        @Test
+        @DisplayName("Should return JWT token when login is successful")
+        void login_whenValidCredentials_returnsJwtResponse() {
+            LoginRequest loginRequest = new LoginRequest("User1", "Password123!");
+
+            when(authenticationManager.authenticate(any())).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(userDetails);
+            when(jwtService.generateToken(userDetails)).thenReturn("token");
+
+            JwtResponse response = authService.login(loginRequest);
+
+            assertNotNull(response);
+            assertEquals("token", response.token());
+
+            verify(authenticationManager).authenticate(any());
+            verify(jwtService, times(1)).generateToken(userDetails);
         }
     }
 }
