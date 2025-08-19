@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -131,6 +132,22 @@ class AuthServiceTest {
 
             verify(authenticationManager).authenticate(any());
             verify(jwtService, times(1)).generateToken(userDetails);
+        }
+
+        @Test
+        @DisplayName("Should throw BadCredentialsException when username is invalid")
+        void login_whenInvalidUsername_throwsBadCredentialsException() {
+
+            LoginRequest loginRequest = new LoginRequest("invalidUser", "Password123!");
+
+            when(authenticationManager.authenticate(any())).thenThrow(new BadCredentialsException("Invalid credentials"));
+
+            BadCredentialsException exception = assertThrows(BadCredentialsException.class, () -> authService.login(loginRequest));
+
+            assertEquals("Invalid credentials", exception.getMessage());
+
+            verify(authenticationManager).authenticate(any());
+            verify(jwtService, never()).generateToken(any());
         }
     }
 }
