@@ -1,11 +1,5 @@
-<<<<<<< Updated upstream
-package com.femcoders.fixly.Auth;
-
-import com.femcoders.fixly.auth.AuthService;
-=======
 package com.femcoders.fixly.auth;
 
->>>>>>> Stashed changes
 import com.femcoders.fixly.auth.dtos.JwtResponse;
 import com.femcoders.fixly.auth.dtos.LoginRequest;
 import com.femcoders.fixly.auth.dtos.RegistrationRequest;
