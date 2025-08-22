@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
+    @Transactional
     public UserResponse register(RegistrationRequest request){
         if(userRepository.existsByUsername(request.username())){
             throw new EntityAlreadyExistsException(User.class.getSimpleName(), "username", request.username());
@@ -39,6 +41,7 @@ public class AuthService {
         return UserMapper.userResponseToDto(registeredUser);
     }
 
+    @Transactional
     public JwtResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password())
