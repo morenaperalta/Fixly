@@ -1,5 +1,6 @@
 package com.femcoders.fixly.user.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.femcoders.fixly.user.Role;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,9 @@ public record AdminResponse(
         String lastName,
         String company,
         Role role,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime createdAt,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime updatedAt
 ) {
 }
