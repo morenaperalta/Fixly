@@ -8,10 +8,10 @@ public record CreateWorkOrderRequest(
         @Size(min = 5)
         String title,
 
-        @NotBlank
+        @NotBlank(message = "Description must not be blank")
         String description,
 
-        @NotBlank
+        @NotBlank(message = "Location must not be blank")
         @Size(min = 3)
         String location) {
 }
