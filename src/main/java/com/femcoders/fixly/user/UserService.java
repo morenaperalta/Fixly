@@ -2,15 +2,24 @@ package com.femcoders.fixly.user;
 
 import com.femcoders.fixly.exception.EntityNotFoundException;
 import com.femcoders.fixly.security.CustomUserDetails;
+import com.femcoders.fixly.user.dtos.AdminResponse;
+import com.femcoders.fixly.user.dtos.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+
+    public List<AdminResponse> getAllUsers(){
+        List<User> users = userRepository.findAll();
+        return users.stream().map(UserMapper::adminResponseToDto).toList();
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws EntityNotFoundException {
