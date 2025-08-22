@@ -5,7 +5,6 @@ import com.femcoders.fixly.comment.Comment;
 import com.femcoders.fixly.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,7 +62,7 @@ public class WorkOrder {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "created_by")
+    @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 
     @ManyToMany

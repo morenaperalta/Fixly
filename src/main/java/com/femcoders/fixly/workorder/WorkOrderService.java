@@ -1,5 +1,7 @@
 package com.femcoders.fixly.workorder;
 
+import com.femcoders.fixly.user.User;
+import com.femcoders.fixly.user.UserService;
 import com.femcoders.fixly.workorder.dtos.CreateWorkOrderRequest;
 import com.femcoders.fixly.workorder.dtos.CreateWorkOrderResponse;
 import com.femcoders.fixly.workorder.dtos.WorkOrderMapper;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class WorkOrderService {
     private final WorkOrderRepository workOrderRepository;
+    private final UserService userService;
     private final SecureRandom secureRandom = new SecureRandom();
 
     @Transactional
@@ -22,6 +25,9 @@ public class WorkOrderService {
         WorkOrder workOrder = WorkOrderMapper.createWorkOrderRequestToEntity(request);
         String identifier = generateIdentifier();
         workOrder.setIdentifier(identifier);
+
+        User user = userService.getAuthenticatedUser();
+        workOrder.setCreatedBy(user);
 
         if (workOrder.getStatus() == null) {
             workOrder.setStatus(Status.PENDING);
