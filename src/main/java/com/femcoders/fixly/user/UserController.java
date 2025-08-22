@@ -1,5 +1,6 @@
 package com.femcoders.fixly.user;
 
+import com.femcoders.fixly.shared.exception.ErrorResponse;
 import com.femcoders.fixly.user.dtos.AdminResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -23,25 +24,13 @@ import java.util.List;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final  UserService userService;
+    private final UserService userService;
 
-    @Operation(
-            summary = "Get users",
-            description = "Retrieve a list of all users with admin-level details"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "List of users retrieved successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = AdminResponse.class))
-                    )
-            ),
-    })
+    @Operation(summary = "Get users", description = "Retrieve a list of all users with admin-level details")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "List of users retrieved successfully", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdminResponse.class)))), @ApiResponse(responseCode = "401", description = "Authentication required - JWT token missing or invalid", content = @Content(schema = @Schema(implementation = ErrorResponse.class))), @ApiResponse(responseCode = "403", description = "Access denied - Insufficient permissions (requires ADMIN or SUPERVISOR role)", content = @Content(schema = @Schema(implementation = ErrorResponse.class))), @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("")
     @PreAuthorize("hasAnyRole('SUPERVISOR', 'ADMIN')")
-    public ResponseEntity<List<AdminResponse>> getAllUsers(){
+    public ResponseEntity<List<AdminResponse>> getAllUsers() {
         List<AdminResponse> userResponses = userService.getAllUsers();
         return new ResponseEntity<>(userResponses, HttpStatus.OK);
     }
