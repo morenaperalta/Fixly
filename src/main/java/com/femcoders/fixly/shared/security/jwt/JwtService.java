@@ -1,6 +1,6 @@
-package com.femcoders.fixly.security.jwt;
+package com.femcoders.fixly.shared.security.jwt;
 
-import com.femcoders.fixly.security.CustomUserDetails;
+import com.femcoders.fixly.shared.security.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

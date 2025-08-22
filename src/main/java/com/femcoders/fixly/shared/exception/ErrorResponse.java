@@ -1,4 +1,4 @@
-package com.femcoders.fixly.exception;
+package com.femcoders.fixly.shared.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

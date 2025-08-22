@@ -1,7 +1,7 @@
 package com.femcoders.fixly.user;
 
-import com.femcoders.fixly.exception.EntityNotFoundException;
-import com.femcoders.fixly.security.CustomUserDetails;
+import com.femcoders.fixly.shared.exception.EntityNotFoundException;
+import com.femcoders.fixly.shared.security.CustomUserDetails;
 import com.femcoders.fixly.user.dtos.AdminResponse;
 import com.femcoders.fixly.user.dtos.UserMapper;
 import lombok.RequiredArgsConstructor;

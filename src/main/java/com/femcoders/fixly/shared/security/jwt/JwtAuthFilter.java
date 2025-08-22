@@ -1,4 +1,4 @@
-package com.femcoders.fixly.security.jwt;
+package com.femcoders.fixly.shared.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

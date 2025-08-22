@@ -1,4 +1,4 @@
-package com.femcoders.fixly.security;
+package com.femcoders.fixly.shared.security;
 import com.femcoders.fixly.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

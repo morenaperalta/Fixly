@@ -1,4 +1,4 @@
-package com.femcoders.fixly.exception;
+package com.femcoders.fixly.shared.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

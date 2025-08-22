@@ -1,4 +1,4 @@
-package com.femcoders.fixly.config;
+package com.femcoders.fixly.shared.config;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;

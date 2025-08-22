@@ -1,4 +1,4 @@
-package com.femcoders.fixly.config;
+package com.femcoders.fixly.shared.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

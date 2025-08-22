@@ -1,4 +1,4 @@
-package com.femcoders.fixly.exception;
+package com.femcoders.fixly.shared.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;

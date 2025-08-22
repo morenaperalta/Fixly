@@ -2,8 +2,8 @@ package com.femcoders.fixly.auth;
 
 import com.femcoders.fixly.auth.dtos.JwtResponse;
 import com.femcoders.fixly.auth.dtos.LoginRequest;
-import com.femcoders.fixly.exception.ErrorResponse;
-import com.femcoders.fixly.security.jwt.JwtService;
+import com.femcoders.fixly.shared.exception.ErrorResponse;
+import com.femcoders.fixly.shared.security.jwt.JwtService;
 import com.femcoders.fixly.auth.dtos.RegistrationRequest;
 import com.femcoders.fixly.user.dtos.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
