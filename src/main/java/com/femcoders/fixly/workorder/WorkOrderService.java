@@ -3,14 +3,17 @@ package com.femcoders.fixly.workorder;
 import com.femcoders.fixly.user.User;
 import com.femcoders.fixly.user.UserService;
 import com.femcoders.fixly.workorder.dtos.CreateWorkOrderRequest;
-import com.femcoders.fixly.workorder.dtos.CreateWorkOrderResponse;
+import com.femcoders.fixly.workorder.dtos.WorkOrderResponse;
 import com.femcoders.fixly.workorder.dtos.WorkOrderMapper;
+import com.femcoders.fixly.workorder.enums.Status;
+import com.femcoders.fixly.workorder.enums.SupervisionStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service
@@ -21,7 +24,7 @@ public class WorkOrderService {
     private final SecureRandom secureRandom = new SecureRandom();
 
     @Transactional
-    public CreateWorkOrderResponse createWorkOrder(CreateWorkOrderRequest request) {
+    public WorkOrderResponse createWorkOrder(CreateWorkOrderRequest request) {
         WorkOrder workOrder = WorkOrderMapper.createWorkOrderRequestToEntity(request);
         String identifier = generateIdentifier();
         workOrder.setIdentifier(identifier);
@@ -37,7 +40,13 @@ public class WorkOrderService {
         }
 
         WorkOrder createdWorkOrder = workOrderRepository.save(workOrder);
-        return WorkOrderMapper.createWorkOrderResponseToDto(createdWorkOrder);
+        return WorkOrderMapper.workOrderToDto(createdWorkOrder);
+    }
+
+    @Transactional(readOnly = true)
+    public List<WorkOrderResponse> getAllWorkOrders(){
+        List<WorkOrder> workOrders = workOrderRepository.findAll();
+        return workOrders.stream().map(WorkOrderMapper::workOrderToDto).toList();
     }
 
     private String generateIdentifier() {

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 
-public record CreateWorkOrderResponse(
+public record WorkOrderResponse(
         String identifier,
         String title,
         String description,

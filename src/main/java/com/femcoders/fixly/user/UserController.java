@@ -26,7 +26,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @Operation(summary = "Get users", description = "Retrieve a list of all users with admin-level details")
+    @Operation(summary = "Get users", description = "Retrieve a list of all users. Available to SUPERVISOR and ADMIN roles.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "List of users retrieved successfully", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AdminResponse.class)))), @ApiResponse(responseCode = "401", description = "Authentication required - JWT token missing or invalid", content = @Content(schema = @Schema(implementation = ErrorResponse.class))), @ApiResponse(responseCode = "403", description = "Access denied - Insufficient permissions (requires ADMIN or SUPERVISOR role)", content = @Content(schema = @Schema(implementation = ErrorResponse.class))), @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("")
     @PreAuthorize("hasAnyRole('SUPERVISOR', 'ADMIN')")

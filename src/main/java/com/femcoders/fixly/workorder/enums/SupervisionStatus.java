@@ -1,4 +1,4 @@
-package com.femcoders.fixly.workorder;
+package com.femcoders.fixly.workorder.enums;
 
 public enum SupervisionStatus {
     PENDING,
