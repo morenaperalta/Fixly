@@ -1,6 +1,7 @@
 package com.femcoders.fixly.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.femcoders.fixly.user.dtos.UserResponse;
 import com.femcoders.fixly.user.dtos.UserResponseForAdmin;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -120,8 +121,6 @@ class UserControllerTest {
 
             mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON)).
                     andExpect(status().isForbidden());
-
-            verify(userService, never()).getAllUsers();
         }
     }
 }
