@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record CreateWorkOrderRequest(
-        @NotBlank
+        @NotBlank(message = "Title must not be blank")
         @Size(min = 5)
         String title,
 

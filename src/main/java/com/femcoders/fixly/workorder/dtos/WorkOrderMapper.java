@@ -6,7 +6,7 @@ public class WorkOrderMapper {
         return WorkOrder.builder().title(request.title().trim()).description(request.description().trim()).location(request.location().trim()).build();
     }
 
-    public static CreateWorkOrderResponse createWorkOrderResponseToDto(WorkOrder workorder){
-        return new CreateWorkOrderResponse(workorder.getIdentifier(), workorder.getTitle(), workorder.getDescription(), workorder.getLocation(), workorder.getCreatedAt());
+    public static WorkOrderResponse workOrderToDto(WorkOrder workorder){
+        return new WorkOrderResponse(workorder.getIdentifier(), workorder.getTitle(), workorder.getDescription(), workorder.getLocation(), workorder.getCreatedAt());
     }
 }
