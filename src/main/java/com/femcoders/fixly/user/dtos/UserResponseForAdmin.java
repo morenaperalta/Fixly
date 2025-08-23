@@ -5,7 +5,7 @@ import com.femcoders.fixly.user.Role;
 
 import java.time.LocalDateTime;
 
-public record AdminResponse(
+public record UserResponseForAdmin(
         Long id,
         String username,
         String email,

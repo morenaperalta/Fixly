@@ -3,7 +3,7 @@ package com.femcoders.fixly.user.dtos;
 import com.femcoders.fixly.user.Role;
 import jakarta.validation.constraints.*;
 
-public record AdminUpdateRequest(
+public record UserUpdateRequestForAdmin(
         @Size(max = 100, message = "Username must be a maximum of 100 characters long")
         String username,
 

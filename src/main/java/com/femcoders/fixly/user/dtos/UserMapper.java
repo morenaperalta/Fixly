@@ -7,7 +7,7 @@ public class UserMapper {
         return User.builder().username(request.username().trim()).email(request.email().trim()).firstName(request.firstName().trim()).lastName(request.lastName().trim()).company(request.company().trim()).build();
     }
 
-    public static User adminUpdateToEntity(AdminUpdateRequest request){
+    public static User adminUpdateToEntity(UserUpdateRequestForAdmin request){
         return User.builder().username(request.username().trim()).email(request.email().trim()).firstName(request.firstName().trim()).lastName(request.lastName().trim()).company(request.company().trim()).role(request.role()).build();
     }
 
@@ -15,7 +15,7 @@ public class UserMapper {
         return new UserResponse(user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCompany());
     }
 
-    public static AdminResponse adminResponseToDto(User user){
-        return new AdminResponse(user.getId(), user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCompany(), user.getRole(), user.getCreatedAt(), user.getUpdatedAt());
+    public static UserResponseForAdmin adminResponseToDto(User user){
+        return new UserResponseForAdmin(user.getId(), user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCompany(), user.getRole(), user.getCreatedAt(), user.getUpdatedAt());
     }
 }

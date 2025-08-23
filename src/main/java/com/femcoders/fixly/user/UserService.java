@@ -2,7 +2,7 @@ package com.femcoders.fixly.user;
 
 import com.femcoders.fixly.shared.exception.EntityNotFoundException;
 import com.femcoders.fixly.shared.security.CustomUserDetails;
-import com.femcoders.fixly.user.dtos.AdminResponse;
+import com.femcoders.fixly.user.dtos.UserResponseForAdmin;
 import com.femcoders.fixly.user.dtos.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +19,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<AdminResponse> getAllUsers(){
+    public List<UserResponseForAdmin> getAllUsers(){
         List<User> users = userRepository.findAll();
         return users.stream().map(UserMapper::adminResponseToDto).toList();
     }
