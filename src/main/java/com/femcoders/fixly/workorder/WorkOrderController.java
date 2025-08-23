@@ -50,4 +50,18 @@ public class WorkOrderController {
         List<WorkOrderResponse> workOrderResponses = workOrderService.getAllWorkOrders();
         return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
     }
+
+    @Operation(summary = "Get all work orders assigned", description = "Retrieve a list of all work orders assigned to authenticated user with role TECHNICIAN"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of work orders retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden")
+    })
+    @PreAuthorize("hasRole('TECHNICIAN')")
+    @GetMapping("/assigned")
+    public ResponseEntity<List<WorkOrderResponse>> getAllWorkOrdersAssigned(){
+        List<WorkOrderResponse> workOrderResponses = workOrderService.getWorkOrdersAssigned();
+        return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
+    }
 }

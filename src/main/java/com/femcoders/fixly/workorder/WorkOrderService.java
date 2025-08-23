@@ -3,8 +3,8 @@ package com.femcoders.fixly.workorder;
 import com.femcoders.fixly.user.User;
 import com.femcoders.fixly.user.UserService;
 import com.femcoders.fixly.workorder.dtos.CreateWorkOrderRequest;
-import com.femcoders.fixly.workorder.dtos.WorkOrderResponse;
 import com.femcoders.fixly.workorder.dtos.WorkOrderMapper;
+import com.femcoders.fixly.workorder.dtos.WorkOrderResponse;
 import com.femcoders.fixly.workorder.enums.Status;
 import com.femcoders.fixly.workorder.enums.SupervisionStatus;
 import lombok.RequiredArgsConstructor;
@@ -44,9 +44,16 @@ public class WorkOrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<WorkOrderResponse> getAllWorkOrders(){
+    public List<WorkOrderResponse> getAllWorkOrders() {
         List<WorkOrder> workOrders = workOrderRepository.findAll();
         return workOrders.stream().map(WorkOrderMapper::workOrderToDto).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<WorkOrderResponse> getWorkOrdersAssigned() {
+        User user = userService.getAuthenticatedUser();
+        List<WorkOrder> workOrders = workOrderRepository.findAll();
+        return workOrders.stream().filter(workOrder -> workOrder.getAssignedTo() != null && workOrder.getAssignedTo().contains(user)).map(WorkOrderMapper::workOrderToDto).toList();
     }
 
     private String generateIdentifier() {
