@@ -112,5 +112,16 @@ class UserControllerTest {
 
             verify(userService, times(1)).getAllUsers();
         }
+
+        @Test
+        @DisplayName("Should return 403 when authenticated as CLIENT or TECHNICIAN")
+        @WithMockUser(roles = {"CLIENT", "TECHNICIAN"})
+        void getAllUsers_whenAuthenticatedAsClientOrTechnician_shouldReturnForbidden() throws Exception {
+
+            mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON)).
+                    andExpect(status().isForbidden());
+
+            verify(userService, never()).getAllUsers();
+        }
     }
 }
