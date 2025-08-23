@@ -1,6 +1,7 @@
 package com.femcoders.fixly.user;
 
 import com.femcoders.fixly.shared.exception.ErrorResponse;
+import com.femcoders.fixly.user.dtos.UserResponse;
 import com.femcoders.fixly.user.dtos.UserResponseForAdmin;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -34,4 +35,14 @@ public class UserController {
         List<UserResponseForAdmin> userResponses = userService.getAllUsers();
         return new ResponseEntity<>(userResponses, HttpStatus.OK);
     }
+
+    @Operation(summary = "Get own profile", description = "Retrieve profile of the authenticated user")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "User profile retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))), @ApiResponse(responseCode = "401", description = "Authentication required - JWT token missing or invalid", content = @Content(schema = @Schema(implementation = ErrorResponse.class))), @ApiResponse(responseCode = "403", description = "Access denied - Insufficient permissions", content = @Content(schema = @Schema(implementation = ErrorResponse.class))), @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserResponse> getOwnProfile() {
+        UserResponse userResponse = userService.getOwnProfile();
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
+    }
+
 }
