@@ -67,4 +67,18 @@ public class WorkOrderController {
         List<WorkOrderResponseForTechnician> workOrderResponses = workOrderService.getWorkOrdersAssigned();
         return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
     }
+
+    @Operation(summary = "Get work orders supervised", description = "Retrieve a list of all work orders supervised by authenticated user with role SUPERVISOR."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of work orders retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden")
+    })
+    @PreAuthorize("hasRole('SUPERVISOR')")
+    @GetMapping("/supervised")
+    public ResponseEntity<List<WorkOrderResponseForAdminAndSupervisor>> getAllWorkOrdersSupervised(){
+        List<WorkOrderResponseForAdminAndSupervisor> workOrderResponses = workOrderService.getWorkOrdersSupervised();
+        return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
+    }
 }

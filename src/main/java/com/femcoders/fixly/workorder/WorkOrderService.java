@@ -56,7 +56,20 @@ public class WorkOrderService {
     public List<WorkOrderResponseForTechnician> getWorkOrdersAssigned() {
         User user = userService.getAuthenticatedUser();
         List<WorkOrder> workOrders = workOrderRepository.findAll();
-        return workOrders.stream().filter(workOrder -> workOrder.getAssignedTo() != null && workOrder.getAssignedTo().contains(user)).map(WorkOrderMapper::workOrderResponseTechToDto).toList();
+        return workOrders.stream().
+                filter(workOrder ->
+                        workOrder.getAssignedTo() != null &&
+                                workOrder.getAssignedTo().contains(user)).map(WorkOrderMapper::workOrderResponseTechToDto).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<WorkOrderResponseForAdminAndSupervisor> getWorkOrdersSupervised() {
+        User user = userService.getAuthenticatedUser();
+        List<WorkOrder> workOrders = workOrderRepository.findAll();
+        return workOrders.stream()
+                .filter(workOrder ->
+                        workOrder.getSupervisedBy() != null &&
+                                workOrder.getSupervisedBy().equals(user)).map(WorkOrderMapper::workOrderResponseAdminSupToDto).toList();
     }
 
     private String generateIdentifier() {
