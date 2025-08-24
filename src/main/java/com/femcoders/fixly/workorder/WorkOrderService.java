@@ -1,5 +1,6 @@
 package com.femcoders.fixly.workorder;
 
+import com.femcoders.fixly.shared.exception.EntityNotFoundException;
 import com.femcoders.fixly.user.User;
 import com.femcoders.fixly.user.UserService;
 import com.femcoders.fixly.workorder.dtos.*;
@@ -18,6 +19,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class WorkOrderService {
+    private static final String ID_FIELD = "id";
     private final WorkOrderRepository workOrderRepository;
     private final UserService userService;
     private final SecureRandom secureRandom = new SecureRandom();
@@ -71,6 +73,21 @@ public class WorkOrderService {
         User user = userService.getAuthenticatedUser();
         List<WorkOrder> workOrders = workOrderRepository.findByCreatedBy(user);
         return workOrders.stream().map(WorkOrderMapper::workOrderResponseClientToDto).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public WorkOrderResponseForAdminAndSupervisor getWorkOrderByIdForAdmin(Long id){
+        WorkOrder workOrder = workOrderRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, id.toString()));
+        return WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder);
+    }
+
+    @Transactional(readOnly = true)
+    public WorkOrderResponseForAdminAndSupervisor getWorkOrderByIdForSupervisor(Long id){
+        User supervisor = userService.getAuthenticatedUser();
+        WorkOrder workOrder = workOrderRepository.findByIdAndSupervisedBy(id, supervisor)
+                .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, id.toString()));
+        return WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder);
     }
 
 

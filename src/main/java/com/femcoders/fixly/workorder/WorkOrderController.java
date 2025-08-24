@@ -92,4 +92,19 @@ public class WorkOrderController {
         List<WorkOrderResponseForClient> workOrderResponses = workOrderService.getWorkOrdersCreatedByClient();
         return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{id}")
+    public ResponseEntity<WorkOrderResponseForAdminAndSupervisor> getWorkOrderByIdByAdmin(@PathVariable Long id) {
+        WorkOrderResponseForAdminAndSupervisor workOrderResponse = workOrderService.getWorkOrderByIdForAdmin(id);
+        return new ResponseEntity<>(workOrderResponse, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('SUPERVISOR')")
+    @GetMapping("/supervised/{id}")
+    public ResponseEntity<WorkOrderResponseForAdminAndSupervisor> getWorkOrderByIdBySupervisor(@PathVariable Long id) {
+        WorkOrderResponseForAdminAndSupervisor workOrderResponse = workOrderService.getWorkOrderByIdForSupervisor(id);
+        return new ResponseEntity<>(workOrderResponse, HttpStatus.OK);
+    }
+
 }
