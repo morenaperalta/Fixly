@@ -55,32 +55,24 @@ public class WorkOrderService {
     @Transactional(readOnly = true)
     public List<WorkOrderResponseForTechnician> getWorkOrdersAssigned() {
         User user = userService.getAuthenticatedUser();
-        List<WorkOrder> workOrders = workOrderRepository.findAll();
-        return workOrders.stream().
-                filter(workOrder ->
-                        workOrder.getAssignedTo() != null &&
-                                workOrder.getAssignedTo().contains(user)).map(WorkOrderMapper::workOrderResponseTechToDto).toList();
+        List<WorkOrder> workOrders = workOrderRepository.findByAssignedToContaining(user);
+        return workOrders.stream().map(WorkOrderMapper::workOrderResponseTechToDto).toList();
     }
 
     @Transactional(readOnly = true)
     public List<WorkOrderResponseForAdminAndSupervisor> getWorkOrdersSupervised() {
         User user = userService.getAuthenticatedUser();
-        List<WorkOrder> workOrders = workOrderRepository.findAll();
-        return workOrders.stream()
-                .filter(workOrder ->
-                        workOrder.getSupervisedBy() != null &&
-                                workOrder.getSupervisedBy().equals(user)).map(WorkOrderMapper::workOrderResponseAdminSupToDto).toList();
+        List<WorkOrder> workOrders = workOrderRepository.findBySupervisedBy(user);
+        return workOrders.stream().map(WorkOrderMapper::workOrderResponseAdminSupToDto).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<WorkOrderResponseForClient> getWorkOrdersCreated() {
+    public List<WorkOrderResponseForClient> getWorkOrdersCreatedByClient() {
         User user = userService.getAuthenticatedUser();
-        List<WorkOrder> workOrders = workOrderRepository.findAll();
-        return workOrders.stream()
-                .filter(workOrder ->
-                        workOrder.getCreatedBy() != null &&
-                                workOrder.getCreatedBy().equals(user)).map(WorkOrderMapper::workOrderResponseClientToDto).toList();
+        List<WorkOrder> workOrders = workOrderRepository.findByCreatedBy(user);
+        return workOrders.stream().map(WorkOrderMapper::workOrderResponseClientToDto).toList();
     }
+
 
     private String generateIdentifier() {
         LocalDateTime now = LocalDateTime.now();

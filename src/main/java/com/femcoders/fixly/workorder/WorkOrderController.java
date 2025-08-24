@@ -88,8 +88,8 @@ public class WorkOrderController {
     })
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping("/created")
-    public ResponseEntity<List<WorkOrderResponseForClient>> getAllWorkOrdersCreated(){
-        List<WorkOrderResponseForClient> workOrderResponses = workOrderService.getWorkOrdersCreated();
+    public ResponseEntity<List<WorkOrderResponseForClient>> getAllWorkOrdersCreatedByClient(){
+        List<WorkOrderResponseForClient> workOrderResponses = workOrderService.getWorkOrdersCreatedByClient();
         return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
     }
 }
