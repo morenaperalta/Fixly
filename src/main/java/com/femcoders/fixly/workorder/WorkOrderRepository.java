@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface WorkOrderRepository extends JpaRepository<WorkOrder, Long>, JpaSpecificationExecutor<WorkOrder> {
     boolean existsByIdentifier(String identifier);
 
+
 }

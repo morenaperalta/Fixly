@@ -17,7 +17,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -41,6 +41,11 @@ public class WorkOrder {
     @Column(nullable = false)
     private String description;
 
+    @NotBlank
+    @Size(min = 3)
+    @Column(nullable = false)
+    private String location;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 
@@ -50,11 +55,6 @@ public class WorkOrder {
     @Enumerated(EnumType.STRING)
     @Column(name = "supervision_status")
     private SupervisionStatus supervisionStatus;
-
-    @NotBlank
-    @Size(min = 3)
-    @Column(nullable = false)
-    private String location;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -70,15 +70,15 @@ public class WorkOrder {
 
     @ManyToMany
     @JoinTable(name = "workorder_assigned_to", joinColumns = @JoinColumn(name = "workorder_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> assignedTo;
+    private List<User> assignedTo;
 
     @ManyToOne
     @JoinColumn(name = "supervised_by")
     private User supervisedBy;
 
     @OneToMany(mappedBy = "workorder",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments;
+    private List<Comment> comments;
 
     @OneToMany
-    private Set<Attachment> attachments;
+    private List<Attachment> attachments;
 }

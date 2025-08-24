@@ -2,6 +2,8 @@ package com.femcoders.fixly.workorder;
 
 import com.femcoders.fixly.workorder.dtos.CreateWorkOrderRequest;
 import com.femcoders.fixly.workorder.dtos.WorkOrderResponse;
+import com.femcoders.fixly.workorder.dtos.WorkOrderResponseForAdminAndSupervisor;
+import com.femcoders.fixly.workorder.dtos.WorkOrderResponseForTechnician;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -37,21 +39,25 @@ public class WorkOrderController {
         return new ResponseEntity<>(workOrderResponse, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Get work orders", description = "Retrieve a list of all work orders. Available to SUPERVISOR and ADMIN roles."
+    @Operation(summary = "Get work orders", description = "Retrieve a list of all work orders. Available to ADMIN roles."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List of work orders retrieved successfully"),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("")
-    public ResponseEntity<List<WorkOrderResponse>> getAllWorkOrders(){
-        List<WorkOrderResponse> workOrderResponses = workOrderService.getAllWorkOrders();
+    public ResponseEntity<List<WorkOrderResponseForAdminAndSupervisor>> getAllWorkOrders(){
+        List<WorkOrderResponseForAdminAndSupervisor> workOrderResponses = workOrderService.getAllWorkOrders();
         return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
     }
 
+<<<<<<< Updated upstream
     @Operation(summary = "Get all work orders assigned", description = "Retrieve a list of all work orders assigned to authenticated user with role TECHNICIAN"
+=======
+    @Operation(summary = "Get work orders assigned", description = "Retrieve a list of all work orders assigned to authenticated user with role TECHNICIAN."
+>>>>>>> Stashed changes
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List of work orders retrieved successfully"),
@@ -60,8 +66,17 @@ public class WorkOrderController {
     })
     @PreAuthorize("hasRole('TECHNICIAN')")
     @GetMapping("/assigned")
+<<<<<<< Updated upstream
+    public ResponseEntity<List<WorkOrderResponseForTechnician>> getAllWorkOrdersAssigned(){
+        List<WorkOrderResponseForTechnician> workOrderResponses = workOrderService.getWorkOrdersAssigned();
+        return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
+    }
+
+
+=======
     public ResponseEntity<List<WorkOrderResponse>> getAllWorkOrdersAssigned(){
         List<WorkOrderResponse> workOrderResponses = workOrderService.getWorkOrdersAssigned();
         return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
     }
+>>>>>>> Stashed changes
 }

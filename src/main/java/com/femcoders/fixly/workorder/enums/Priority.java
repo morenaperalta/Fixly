@@ -1,5 +1,5 @@
 package com.femcoders.fixly.workorder.enums;
 
 public enum Priority {
-    LOW, MEDIUM, HIGH, CRITICAL
+   PENDING, LOW, MEDIUM, HIGH, CRITICAL
 }
