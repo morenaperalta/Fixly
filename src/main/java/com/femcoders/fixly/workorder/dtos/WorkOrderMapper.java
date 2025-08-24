@@ -112,4 +112,23 @@ public final class WorkOrderMapper {
                 attachments
         );
     }
+
+    public static WorkOrderResponseForClient workOrderResponseClientToDto(WorkOrder workOrder) {
+        List<AttachmentResponse> attachments = workOrder.getAttachments() != null
+                ? workOrder.getAttachments().stream()
+                .map(AttachmentMapper::attachmentResponseToDto)
+                .toList()
+                : null;
+
+        return new WorkOrderResponseForClient(
+                workOrder.getIdentifier(),
+                workOrder.getTitle(),
+                workOrder.getDescription(),
+                workOrder.getLocation(),
+                workOrder.getStatus(),
+                workOrder.getCreatedAt(),
+                workOrder.getUpdatedAt(),
+                attachments
+        );
+    }
 }

@@ -72,6 +72,16 @@ public class WorkOrderService {
                                 workOrder.getSupervisedBy().equals(user)).map(WorkOrderMapper::workOrderResponseAdminSupToDto).toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<WorkOrderResponseForClient> getWorkOrdersCreated() {
+        User user = userService.getAuthenticatedUser();
+        List<WorkOrder> workOrders = workOrderRepository.findAll();
+        return workOrders.stream()
+                .filter(workOrder ->
+                        workOrder.getCreatedBy() != null &&
+                                workOrder.getCreatedBy().equals(user)).map(WorkOrderMapper::workOrderResponseClientToDto).toList();
+    }
+
     private String generateIdentifier() {
         LocalDateTime now = LocalDateTime.now();
         String monthYear = String.format("%02d%d", now.getMonthValue(), now.getYear());

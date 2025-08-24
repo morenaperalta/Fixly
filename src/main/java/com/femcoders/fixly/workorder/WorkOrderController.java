@@ -1,9 +1,6 @@
 package com.femcoders.fixly.workorder;
 
-import com.femcoders.fixly.workorder.dtos.CreateWorkOrderRequest;
-import com.femcoders.fixly.workorder.dtos.WorkOrderResponse;
-import com.femcoders.fixly.workorder.dtos.WorkOrderResponseForAdminAndSupervisor;
-import com.femcoders.fixly.workorder.dtos.WorkOrderResponseForTechnician;
+import com.femcoders.fixly.workorder.dtos.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -79,6 +76,20 @@ public class WorkOrderController {
     @GetMapping("/supervised")
     public ResponseEntity<List<WorkOrderResponseForAdminAndSupervisor>> getAllWorkOrdersSupervised(){
         List<WorkOrderResponseForAdminAndSupervisor> workOrderResponses = workOrderService.getWorkOrdersSupervised();
+        return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get work orders created", description = "Retrieve a list of all work orders created by authenticated user with role CLIENT."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of work orders retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden")
+    })
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/created")
+    public ResponseEntity<List<WorkOrderResponseForClient>> getAllWorkOrdersCreated(){
+        List<WorkOrderResponseForClient> workOrderResponses = workOrderService.getWorkOrdersCreated();
         return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
     }
 }
