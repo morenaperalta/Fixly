@@ -2,14 +2,8 @@ package com.femcoders.fixly.workorder;
 
 import com.femcoders.fixly.user.User;
 import com.femcoders.fixly.user.UserService;
-<<<<<<< Updated upstream
 import com.femcoders.fixly.workorder.dtos.*;
 import com.femcoders.fixly.workorder.enums.Priority;
-=======
-import com.femcoders.fixly.workorder.dtos.CreateWorkOrderRequest;
-import com.femcoders.fixly.workorder.dtos.WorkOrderMapper;
-import com.femcoders.fixly.workorder.dtos.WorkOrderResponse;
->>>>>>> Stashed changes
 import com.femcoders.fixly.workorder.enums.Status;
 import com.femcoders.fixly.workorder.enums.SupervisionStatus;
 import lombok.RequiredArgsConstructor;
@@ -52,11 +46,8 @@ public class WorkOrderService {
     }
 
     @Transactional(readOnly = true)
-<<<<<<< Updated upstream
     public List<WorkOrderResponseForAdminAndSupervisor> getAllWorkOrders() {
-=======
-    public List<WorkOrderResponse> getAllWorkOrders() {
->>>>>>> Stashed changes
+
         List<WorkOrder> workOrders = workOrderRepository.findAll();
         return workOrders.stream().map(WorkOrderMapper::workOrderResponseAdminSupToDto).toList();
     }
@@ -66,13 +57,6 @@ public class WorkOrderService {
         User user = userService.getAuthenticatedUser();
         List<WorkOrder> workOrders = workOrderRepository.findAll();
         return workOrders.stream().filter(workOrder -> workOrder.getAssignedTo() != null && workOrder.getAssignedTo().contains(user)).map(WorkOrderMapper::workOrderResponseTechToDto).toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<WorkOrderResponse> getWorkOrdersAssigned() {
-        User user = userService.getAuthenticatedUser();
-        List<WorkOrder> workOrders = workOrderRepository.findAll();
-        return workOrders.stream().filter(workOrder -> workOrder.getAssignedTo() != null && workOrder.getAssignedTo().contains(user)).map(WorkOrderMapper::workOrderToDto).toList();
     }
 
     private String generateIdentifier() {

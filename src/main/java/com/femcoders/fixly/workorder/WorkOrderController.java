@@ -53,11 +53,8 @@ public class WorkOrderController {
         return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
     }
 
-<<<<<<< Updated upstream
-    @Operation(summary = "Get all work orders assigned", description = "Retrieve a list of all work orders assigned to authenticated user with role TECHNICIAN"
-=======
+
     @Operation(summary = "Get work orders assigned", description = "Retrieve a list of all work orders assigned to authenticated user with role TECHNICIAN."
->>>>>>> Stashed changes
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List of work orders retrieved successfully"),
@@ -66,17 +63,8 @@ public class WorkOrderController {
     })
     @PreAuthorize("hasRole('TECHNICIAN')")
     @GetMapping("/assigned")
-<<<<<<< Updated upstream
     public ResponseEntity<List<WorkOrderResponseForTechnician>> getAllWorkOrdersAssigned(){
         List<WorkOrderResponseForTechnician> workOrderResponses = workOrderService.getWorkOrdersAssigned();
         return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
     }
-
-
-=======
-    public ResponseEntity<List<WorkOrderResponse>> getAllWorkOrdersAssigned(){
-        List<WorkOrderResponse> workOrderResponses = workOrderService.getWorkOrdersAssigned();
-        return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
-    }
->>>>>>> Stashed changes
 }
