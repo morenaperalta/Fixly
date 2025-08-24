@@ -2,7 +2,10 @@ package com.femcoders.fixly.user.dtos;
 
 import com.femcoders.fixly.user.User;
 
-public class UserMapper {
+public final class UserMapper {
+    private UserMapper() {
+    }
+
     public static User userUpdateToEntity(UserUpdateRequest request){
         return User.builder().username(request.username().trim()).email(request.email().trim()).firstName(request.firstName().trim()).lastName(request.lastName().trim()).company(request.company().trim()).build();
     }
@@ -17,5 +20,9 @@ public class UserMapper {
 
     public static UserResponseForAdmin adminResponseToDto(User user){
         return new UserResponseForAdmin(user.getId(), user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCompany(), user.getRole(), user.getCreatedAt(), user.getUpdatedAt());
+    }
+
+    public static UserSummaryResponse userSummaryResponseToDto(User user) {
+        return new UserSummaryResponse(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName());
     }
 }
