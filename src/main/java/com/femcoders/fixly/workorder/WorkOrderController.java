@@ -36,7 +36,7 @@ public class WorkOrderController {
         return new ResponseEntity<>(workOrderResponse, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Get work orders", description = "Retrieve a list of all work orders. Available to ADMIN roles."
+    @Operation(summary = "Get all work orders", description = "Retrieve a list of all work orders. Available to ADMIN roles."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List of work orders retrieved successfully"),
@@ -93,6 +93,14 @@ public class WorkOrderController {
         return new ResponseEntity<>(workOrderResponses, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get work order by id", description = "Retrieve work order by id. Available for authenticated user with role ADMIN."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of work orders retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "WorkOrder with id {id} not found")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<WorkOrderResponseForAdminAndSupervisor> getWorkOrderByIdByAdmin(@PathVariable Long id) {
@@ -100,6 +108,14 @@ public class WorkOrderController {
         return new ResponseEntity<>(workOrderResponse, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get work order supervised by id", description = "Retrieve work order supervised by id. Available for authenticated user with role SUPERVISOR."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of work orders retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "WorkOrder with id {id} not found")
+    })
     @PreAuthorize("hasRole('SUPERVISOR')")
     @GetMapping("/supervised/{id}")
     public ResponseEntity<WorkOrderResponseForAdminAndSupervisor> getWorkOrderByIdBySupervisor(@PathVariable Long id) {
@@ -107,4 +123,33 @@ public class WorkOrderController {
         return new ResponseEntity<>(workOrderResponse, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get work order assigned by identifier", description = "Retrieve work order assigned by identifier. Available for authenticated user with role TECHNICIAN."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of work orders retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "WorkOrder with id {id} not found")
+    })
+    @PreAuthorize("hasRole('TECHNICIAN')")
+    @GetMapping("/assigned/{identifier}")
+    public ResponseEntity<WorkOrderResponseForTechnician> getWorkOrderByIdentifierByTechnician(@PathVariable String identifier) {
+        WorkOrderResponseForTechnician workOrderResponse = workOrderService.getWorkOrderByIdentifierForTechnician(identifier);
+        return new ResponseEntity<>(workOrderResponse, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get work order created by identifier", description = "Retrieve work order created by identifier. Available for authenticated user with role CLIENT."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of work orders retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "WorkOrder with id {id} not found")
+    })
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/created/{identifier}")
+    public ResponseEntity<WorkOrderResponseForClient> getWorkOrderByIdentifierByClient(@PathVariable String identifier) {
+        WorkOrderResponseForClient workOrderResponse = workOrderService.getWorkOrderByIdentifierForClient(identifier);
+        return new ResponseEntity<>(workOrderResponse, HttpStatus.OK);
+    }
 }

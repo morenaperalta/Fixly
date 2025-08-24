@@ -15,11 +15,11 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
 public class WorkOrderService {
     private static final String ID_FIELD = "id";
+    private static final String IDENTIFIER_FIELD = "identifier";
     private final WorkOrderRepository workOrderRepository;
     private final UserService userService;
     private final SecureRandom secureRandom = new SecureRandom();
@@ -90,6 +90,21 @@ public class WorkOrderService {
         return WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder);
     }
 
+    @Transactional(readOnly = true)
+    public WorkOrderResponseForTechnician getWorkOrderByIdentifierForTechnician(String identifier){
+        User technician = userService.getAuthenticatedUser();
+        WorkOrder workOrder = workOrderRepository.findByIdentifierAndAssignedToContaining(identifier, technician)
+                .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier));
+        return WorkOrderMapper.workOrderResponseTechToDto(workOrder);
+    }
+
+    @Transactional(readOnly = true)
+    public WorkOrderResponseForClient getWorkOrderByIdentifierForClient(String identifier){
+        User client = userService.getAuthenticatedUser();
+        WorkOrder workOrder = workOrderRepository.findByIdentifierAndCreatedBy(identifier, client)
+                .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier));
+        return WorkOrderMapper.workOrderResponseClientToDto(workOrder);
+    }
 
     private String generateIdentifier() {
         LocalDateTime now = LocalDateTime.now();
