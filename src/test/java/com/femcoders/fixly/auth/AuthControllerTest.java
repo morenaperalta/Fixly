@@ -64,6 +64,42 @@ class AuthControllerTest {
                             .content(objectMapper.writeValueAsString(invalidRequest)))
                     .andExpect(status().isBadRequest());
         }
+
+        @Test
+        @DisplayName("Should return 409 when registration username already exists")
+        void register_WhenUsernameAlreadyExists_ReturnsConflict() throws Exception {
+            RegistrationRequest registrationRequest = new RegistrationRequest(
+                    "client",
+                    "newuser@email.com",
+                    "Password123##",
+                    "New",
+                    "User",
+                    "Test Company"
+            );
+
+            mockMvc.perform(post("/api/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(registrationRequest)))
+                    .andExpect(status().isConflict());
+        }
+
+        @Test
+        @DisplayName("Should return 409 when registration email already exists")
+        void register_WhenEmailAlreadyExists_ReturnsConflict() throws Exception {
+            RegistrationRequest registrationRequest = new RegistrationRequest(
+                    "newuser",
+                    "admin@fixly.com",
+                    "Password123##",
+                    "New",
+                    "User",
+                    "Test Company"
+            );
+
+            mockMvc.perform(post("/api/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(registrationRequest)))
+                    .andExpect(status().isConflict());
+        }
     }
 
     @Nested
@@ -93,7 +129,7 @@ class AuthControllerTest {
         }
 
         @Test
-        @DisplayName("Should return 400 when credentials are invalid")
+        @DisplayName("Should return 401 when credentials are invalid")
         void login_WhenInvalidCredentials_ReturnsUnauthorized() throws Exception {
             LoginRequest invalidCredentials = new LoginRequest("admin", "WrongPassword");
 
