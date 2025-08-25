@@ -1,8 +1,10 @@
-package com.femcoders.fixly.workorder;
+package com.femcoders.fixly.workorder.services;
 
 import com.femcoders.fixly.shared.exception.EntityNotFoundException;
 import com.femcoders.fixly.user.User;
 import com.femcoders.fixly.user.UserService;
+import com.femcoders.fixly.workorder.WorkOrder;
+import com.femcoders.fixly.workorder.WorkOrderRepository;
 import com.femcoders.fixly.workorder.dtos.*;
 import com.femcoders.fixly.workorder.enums.Priority;
 import com.femcoders.fixly.workorder.enums.Status;
@@ -11,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,13 +21,13 @@ public class WorkOrderService {
     private static final String ID_FIELD = "id";
     private static final String IDENTIFIER_FIELD = "identifier";
     private final WorkOrderRepository workOrderRepository;
+    private final WorkOrderIdentifierService identifierService;
     private final UserService userService;
-    private final SecureRandom secureRandom = new SecureRandom();
 
     @Transactional
     public WorkOrderResponse createWorkOrder(CreateWorkOrderRequest request) {
         WorkOrder workOrder = WorkOrderMapper.createWorkOrderRequestToEntity(request);
-        String identifier = generateIdentifier();
+        String identifier = identifierService.generateIdentifier();
         workOrder.setIdentifier(identifier);
 
         User user = userService.getAuthenticatedUser();
@@ -104,22 +104,5 @@ public class WorkOrderService {
         WorkOrder workOrder = workOrderRepository.findByIdentifierAndCreatedBy(identifier, client)
                 .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier));
         return WorkOrderMapper.workOrderResponseClientToDto(workOrder);
-    }
-
-    private String generateIdentifier() {
-        LocalDateTime now = LocalDateTime.now();
-        String monthYear = String.format("%02d%d", now.getMonthValue(), now.getYear());
-
-        String randomNumber = generateRandomNumber();
-
-        return "WO-" + randomNumber + "-" + monthYear;
-    }
-
-    private String generateRandomNumber() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < 6; i++) {
-            stringBuilder.append(secureRandom.nextInt(10));
-        }
-        return stringBuilder.toString();
     }
 }
