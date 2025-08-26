@@ -52,6 +52,7 @@ class WorkOrderServiceTest {
     private User authenticatedUser;
     private WorkOrder workOrder1;
     private WorkOrder workOrder2;
+    private User supervisor;
     private User technician;
     private User technician2;
 
@@ -60,6 +61,8 @@ class WorkOrderServiceTest {
         createWorkOrderRequest = new CreateWorkOrderRequest("Fix air conditioning system", "The AC unit is not working properly in the main office", "Main Office Building A");
 
         authenticatedUser = new User(1L, "client1", "client1@email.com", "password123", "John", "Doe", "Company Inc", Role.CLIENT, LocalDateTime.now(), LocalDateTime.now());
+
+        supervisor = new User(2L, "tech1", "tech1@email.com", "password123", "Jane", "Smith", "Fixly Corp", Role.SUPERVISOR, LocalDateTime.now(), LocalDateTime.now());
 
         technician = new User(2L, "tech1", "tech1@email.com", "password123", "Jane", "Smith", "Fixly Corp", Role.TECHNICIAN, LocalDateTime.now(), LocalDateTime.now());
 
@@ -207,6 +210,45 @@ class WorkOrderServiceTest {
 
             verify(userService, times(1)).getAuthenticatedUser();
             verify(workOrderRepository, times(1)).findByAssignedToContaining(technician);
+        }
+    }
+
+    @Nested
+    @DisplayName("Get work orders supervised")
+    class GetWorkOrdersSupervisedTests {
+        @Test
+        @DisplayName("When supervisor has assigned work orders to supervise, it should return list of that work orders")
+        void getWorkOrdersSupervised_whenSupervisorHasSupervisedWorkOrders_returnListOfWorkOrderResponse() {
+            workOrder2.setSupervisedBy(supervisor);
+
+            when(userService.getAuthenticatedUser()).thenReturn(supervisor);
+            when(workOrderRepository.findBySupervisedBy(supervisor)).thenReturn(List.of(workOrder2));
+
+            List<WorkOrderResponseForAdminAndSupervisor> result = workOrderService.getWorkOrdersSupervised();
+
+            assertNotNull(result);
+            assertEquals(1, result.size());
+            assertEquals(workOrder2.getIdentifier(), result.get(0).identifier());
+            assertEquals(workOrder2.getTitle(), result.get(0).title());
+
+            verify(userService, times(1)).getAuthenticatedUser();
+            verify(workOrderRepository, times(1)).findBySupervisedBy(supervisor);
+        }
+
+        @Test
+        @DisplayName("When supervisor has no assigned work orders, it should return empty list")
+        void getWorkOrdersSupervised_whenSupervisorHasNoSupervisedWorkOrders_returnEmptyList() {
+            when(userService.getAuthenticatedUser()).thenReturn(supervisor);
+            when(workOrderRepository.findBySupervisedBy(supervisor)).thenReturn(Collections.emptyList());
+
+            List<WorkOrderResponseForAdminAndSupervisor> result = workOrderService.getWorkOrdersSupervised();
+
+            assertNotNull(result);
+            assertTrue(result.isEmpty());
+            assertEquals(0, result.size());
+
+            verify(userService, times(1)).getAuthenticatedUser();
+            verify(workOrderRepository, times(1)).findBySupervisedBy(supervisor);
         }
     }
 }
