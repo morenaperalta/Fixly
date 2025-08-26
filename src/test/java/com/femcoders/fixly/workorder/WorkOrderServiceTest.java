@@ -6,6 +6,7 @@ import com.femcoders.fixly.user.UserService;
 import com.femcoders.fixly.workorder.dtos.CreateWorkOrderRequest;
 import com.femcoders.fixly.workorder.dtos.WorkOrderResponse;
 import com.femcoders.fixly.workorder.dtos.WorkOrderResponseForAdminAndSupervisor;
+import com.femcoders.fixly.workorder.dtos.WorkOrderResponseForTechnician;
 import com.femcoders.fixly.workorder.enums.Status;
 import com.femcoders.fixly.workorder.enums.SupervisionStatus;
 import com.femcoders.fixly.workorder.services.WorkOrderIdentifierService;
@@ -152,6 +153,60 @@ class WorkOrderServiceTest {
             assertEquals(0, result.size());
 
             verify(workOrderRepository, times(1)).findAll();
+        }
+    }
+
+
+    @Nested
+    @DisplayName("Get work orders assigned")
+    class GetWorkOrdersAssignedTests {
+        @Test
+        @DisplayName("When technician has assigned work orders, it should return list of assigned work orders")
+        void getWorkOrdersAssigned_whenTechnicianHasAssignedWorkOrders_returnListOfWorkOrderResponse() {
+            when(userService.getAuthenticatedUser()).thenReturn(technician);
+            when(workOrderRepository.findByAssignedToContaining(technician)).thenReturn(List.of(workOrder2));
+
+            List<WorkOrderResponseForTechnician> result = workOrderService.getWorkOrdersAssigned();
+
+            assertNotNull(result);
+            assertEquals(1, result.size());
+            assertEquals(workOrder2.getIdentifier(), result.get(0).identifier());
+            assertEquals(workOrder2.getTitle(), result.get(0).title());
+
+            verify(userService, times(1)).getAuthenticatedUser();
+            verify(workOrderRepository, times(1)).findByAssignedToContaining(technician);
+        }
+
+        @Test
+        @DisplayName("When technician has no assigned work orders, it should return empty list")
+        void getWorkOrdersAssigned_whenTechnicianHasNoAssignedWorkOrders_returnEmptyList() {
+            when(userService.getAuthenticatedUser()).thenReturn(technician2);
+            when(workOrderRepository.findByAssignedToContaining(technician2)).thenReturn(Collections.emptyList());
+
+            List<WorkOrderResponseForTechnician> result = workOrderService.getWorkOrdersAssigned();
+
+            assertNotNull(result);
+            assertTrue(result.isEmpty());
+            assertEquals(0, result.size());
+
+            verify(userService, times(1)).getAuthenticatedUser();
+            verify(workOrderRepository, times(1)).findByAssignedToContaining(technician2);
+        }
+
+        @Test
+        @DisplayName("When no work orders exist, it should return empty list")
+        void getWorkOrdersAssigned_whenNoWorkOrdersExist_returnEmptyList() {
+            when(userService.getAuthenticatedUser()).thenReturn(technician);
+            when(workOrderRepository.findByAssignedToContaining(technician)).thenReturn(Collections.emptyList());
+
+            List<WorkOrderResponseForTechnician> result = workOrderService.getWorkOrdersAssigned();
+
+            assertNotNull(result);
+            assertTrue(result.isEmpty());
+            assertEquals(0, result.size());
+
+            verify(userService, times(1)).getAuthenticatedUser();
+            verify(workOrderRepository, times(1)).findByAssignedToContaining(technician);
         }
     }
 }
