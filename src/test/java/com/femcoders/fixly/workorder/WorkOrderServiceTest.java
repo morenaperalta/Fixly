@@ -5,6 +5,7 @@ import com.femcoders.fixly.user.User;
 import com.femcoders.fixly.user.UserService;
 import com.femcoders.fixly.workorder.dtos.CreateWorkOrderRequest;
 import com.femcoders.fixly.workorder.dtos.WorkOrderResponse;
+import com.femcoders.fixly.workorder.dtos.WorkOrderResponseForAdminAndSupervisor;
 import com.femcoders.fixly.workorder.enums.Status;
 import com.femcoders.fixly.workorder.enums.SupervisionStatus;
 import com.femcoders.fixly.workorder.services.WorkOrderIdentifierService;
@@ -20,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -115,6 +117,41 @@ class WorkOrderServiceTest {
             verify(userService, times(1)).getAuthenticatedUser();
             verify(identifierService, times(1)).generateIdentifier();
             verify(workOrderRepository, times(1)).save(any(WorkOrder.class));
+        }
+    }
+
+    @Nested
+    @DisplayName("Get all work orders")
+    class GetAllWorkOrdersTests {
+        @Test
+        @DisplayName("When there is at least one work order, it should return a list of WorkOrderResponse")
+        void getAllWorkOrders_whenExistsWorkOrders_returnListOfWorkOrderResponse() {
+            when(workOrderRepository.findAll()).thenReturn(List.of(workOrder1, workOrder2));
+
+            List<WorkOrderResponseForAdminAndSupervisor> result = workOrderService.getAllWorkOrders();
+
+            assertNotNull(result);
+            assertEquals(2, result.size());
+            assertEquals(workOrder1.getIdentifier(), result.get(0).identifier());
+            assertEquals(workOrder1.getTitle(), result.get(0).title());
+            assertEquals(workOrder2.getIdentifier(), result.get(1).identifier());
+            assertEquals(workOrder2.getTitle(), result.get(1).title());
+
+            verify(workOrderRepository, times(1)).findAll();
+        }
+
+        @Test
+        @DisplayName("When there are no work orders, it should return empty list")
+        void getAllWorkOrders_whenWorkOrdersNotExist_returnEmptyList() {
+            when(workOrderRepository.findAll()).thenReturn(Collections.emptyList());
+
+            List<WorkOrderResponseForAdminAndSupervisor> result = workOrderService.getAllWorkOrders();
+
+            assertNotNull(result);
+            assertTrue(result.isEmpty());
+            assertEquals(0, result.size());
+
+            verify(workOrderRepository, times(1)).findAll();
         }
     }
 }
