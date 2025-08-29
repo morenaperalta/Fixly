@@ -17,5 +17,5 @@ public record UserResponseForAdmin(
         LocalDateTime createdAt,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime updatedAt
-) {
+) implements UserResponse {
 }

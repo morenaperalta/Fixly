@@ -1,9 +1,10 @@
 package com.femcoders.fixly.user.dtos;
 
 public record UserSummaryResponse(
-        Long id,
         String username,
+        String email,
         String firstName,
-        String lastName
-) {
+        String lastName,
+        String company
+) implements UserResponse {
 }

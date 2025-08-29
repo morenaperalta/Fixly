@@ -38,7 +38,7 @@ public class AuthService {
         User user = AuthMapper.registrationToEntity(request);
         user.setPassword(passwordEncoder.encode(request.password()));
         User registeredUser = userRepository.save(user);
-        return UserMapper.userResponseToDto(registeredUser);
+        return UserMapper.userSummaryResponseToDto(registeredUser);
     }
 
     @Transactional

@@ -4,8 +4,10 @@ import com.femcoders.fixly.shared.exception.EntityNotFoundException;
 import com.femcoders.fixly.shared.security.CustomUserDetails;
 import com.femcoders.fixly.user.dtos.UserMapper;
 import com.femcoders.fixly.user.dtos.UserResponse;
+import com.femcoders.fixly.user.dtos.UserResponseFactory;
 import com.femcoders.fixly.user.dtos.UserResponseForAdmin;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,18 +21,18 @@ import java.util.List;
 public class UserService implements UserDetailsService {
     private static final String USERNAME_FIELD = "username";
     private final UserRepository userRepository;
+    private final UserResponseFactory userResponseFactory;
 
     @Transactional(readOnly = true)
-    public List<UserResponseForAdmin> getAllUsers() {
+    public List<UserResponse> getAllUsers(Authentication auth) {
         List<User> users = userRepository.findAll();
-        return users.stream().map(UserMapper::adminResponseToDto).toList();
+        return userResponseFactory.createResponseList(users, auth);
     }
 
     @Transactional(readOnly = true)
-    public UserResponse getOwnProfile() {
-        User authenticatedUser = getAuthenticatedUser();
-        User foundUser = userRepository.findByUsername(authenticatedUser.getUsername()).orElseThrow(() -> new EntityNotFoundException(User.class.getSimpleName(), USERNAME_FIELD, authenticatedUser.getUsername()));
-        return UserMapper.userResponseToDto(foundUser);
+    public UserResponse getOwnProfile(Authentication auth) {
+        User user = getAuthenticatedUser();
+        return userResponseFactory.createUserResponseByRole(user, auth);
     }
 
     @Override
