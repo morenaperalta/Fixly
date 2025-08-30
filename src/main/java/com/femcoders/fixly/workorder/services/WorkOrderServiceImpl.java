@@ -4,14 +4,14 @@ import com.femcoders.fixly.shared.exception.EntityNotFoundException;
 import com.femcoders.fixly.user.entities.User;
 import com.femcoders.fixly.user.services.UserAuthService;
 import com.femcoders.fixly.user.services.UserServiceImpl;
-import com.femcoders.fixly.workorder.entities.WorkOrder;
 import com.femcoders.fixly.workorder.WorkOrderRepository;
-import com.femcoders.fixly.workorder.dtos.*;
+import com.femcoders.fixly.workorder.dtos.WorkOrderMapper;
 import com.femcoders.fixly.workorder.dtos.request.CreateWorkOrderRequest;
 import com.femcoders.fixly.workorder.dtos.response.*;
 import com.femcoders.fixly.workorder.entities.Priority;
 import com.femcoders.fixly.workorder.entities.Status;
 import com.femcoders.fixly.workorder.entities.SupervisionStatus;
+import com.femcoders.fixly.workorder.entities.WorkOrder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class WorkOrderServiceImpl implements WorkOrderService{
+public class WorkOrderServiceImpl implements WorkOrderService {
     private static final String ID_FIELD = "id";
     private static final String IDENTIFIER_FIELD = "identifier";
     private final WorkOrderRepository workOrderRepository;
@@ -70,33 +70,19 @@ public class WorkOrderServiceImpl implements WorkOrderService{
     }
 
     @Transactional(readOnly = true)
-    public WorkOrderResponseForAdmin getWorkOrderByIdForAdmin(Long id){
-        WorkOrder workOrder = workOrderRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, id.toString()));
-        return WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder, mapperService);
-    }
+    public WorkOrderResponse getWorkOrderByIdentifier(String identifier, Authentication auth) {
+        String role = userAuthService.extractRole(auth);
+        User user = userAuthService.getAuthenticatedUser();
+        WorkOrder workOrder;
+        switch (role) {
+            case "ROLE_ADMIN" -> workOrder = workOrderRepository.findByIdentifier(identifier).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, identifier));
+            case "ROLE_SUPERVISOR" -> workOrder = workOrderRepository.findByIdentifierAndSupervisedBy(identifier, user).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, identifier, "supervised"));
+            case "ROLE_TECHNICIAN" ->
+                    workOrder = workOrderRepository.findByIdentifierAndAssignedToContaining(identifier, user).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier, "assigned"));
+            case "ROLE_CLIENT" -> workOrder = workOrderRepository.findByIdentifierAndCreatedBy(identifier, user).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier, "created"));
+            default -> throw new IllegalArgumentException("Unknown role: " + role);
+        }
 
-    @Transactional(readOnly = true)
-    public WorkOrderResponseForAdmin getWorkOrderByIdForSupervisor(Long id){
-        User supervisor = userAuthService.getAuthenticatedUser();
-        WorkOrder workOrder = workOrderRepository.findByIdAndSupervisedBy(id, supervisor)
-                .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, id.toString()));
-        return WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder, mapperService);
-    }
-
-    @Transactional(readOnly = true)
-    public WorkOrderResponseForTechnician getWorkOrderByIdentifierForTechnician(String identifier){
-        User technician = userAuthService.getAuthenticatedUser();
-        WorkOrder workOrder = workOrderRepository.findByIdentifierAndAssignedToContaining(identifier, technician)
-                .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier));
-        return WorkOrderMapper.workOrderResponseTechToDto(workOrder, mapperService);
-    }
-
-    @Transactional(readOnly = true)
-    public WorkOrderResponseForClient getWorkOrderByIdentifierForClient(String identifier){
-        User client = userAuthService.getAuthenticatedUser();
-        WorkOrder workOrder = workOrderRepository.findByIdentifierAndCreatedBy(identifier, client)
-                .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier));
-        return WorkOrderMapper.workOrderResponseClientToDto(workOrder, mapperService);
+        return workOrderResponseFactory.createWorkOrderResponseByRole(workOrder, auth);
     }
 }

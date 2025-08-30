@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.CONFLICT)
 public class InvalidStateException extends RuntimeException{
     public InvalidStateException(String entityClass, String state){
-        super(String.format("Resource %s is in invalid state: %s", entityClass, state));
+        super(String.format("%s is in invalid state: %s", entityClass, state));
     }
 
 }
