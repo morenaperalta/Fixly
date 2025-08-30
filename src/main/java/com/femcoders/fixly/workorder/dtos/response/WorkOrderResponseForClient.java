@@ -1,9 +1,9 @@
-package com.femcoders.fixly.workorder.dtos;
+package com.femcoders.fixly.workorder.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.femcoders.fixly.attachment.dtos.AttachmentResponse;
 import com.femcoders.fixly.comment.dtos.CommentResponse;
-import com.femcoders.fixly.workorder.enums.Status;
+import com.femcoders.fixly.workorder.entities.Status;
 
 import java.time.LocalDateTime;
 import java.util.List;

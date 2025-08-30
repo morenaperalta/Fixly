@@ -1,5 +1,7 @@
 package com.femcoders.fixly.user;
 
+import com.femcoders.fixly.user.entities.Role;
+import com.femcoders.fixly.user.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

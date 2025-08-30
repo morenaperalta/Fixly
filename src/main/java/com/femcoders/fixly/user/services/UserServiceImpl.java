@@ -1,6 +1,6 @@
 package com.femcoders.fixly.user.services;
 
-import com.femcoders.fixly.user.User;
+import com.femcoders.fixly.user.entities.User;
 import com.femcoders.fixly.user.UserRepository;
 import com.femcoders.fixly.user.dtos.response.UserResponse;
 import com.femcoders.fixly.user.dtos.response.UserResponseFactory;

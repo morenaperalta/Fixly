@@ -1,4 +1,4 @@
-package com.femcoders.fixly.workorder.dtos;
+package com.femcoders.fixly.workorder.dtos.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

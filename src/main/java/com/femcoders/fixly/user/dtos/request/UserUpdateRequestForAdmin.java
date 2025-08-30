@@ -1,6 +1,6 @@
 package com.femcoders.fixly.user.dtos.request;
 
-import com.femcoders.fixly.user.Role;
+import com.femcoders.fixly.user.entities.Role;
 import jakarta.validation.constraints.*;
 
 public record UserUpdateRequestForAdmin(

@@ -6,7 +6,7 @@ import com.femcoders.fixly.auth.dtos.LoginRequest;
 import com.femcoders.fixly.shared.exception.EntityAlreadyExistsException;
 import com.femcoders.fixly.shared.security.CustomUserDetails;
 import com.femcoders.fixly.shared.security.jwt.JwtService;
-import com.femcoders.fixly.user.User;
+import com.femcoders.fixly.user.entities.User;
 import com.femcoders.fixly.user.UserRepository;
 import com.femcoders.fixly.user.dtos.UserMapper;
 import com.femcoders.fixly.auth.dtos.RegistrationRequest;

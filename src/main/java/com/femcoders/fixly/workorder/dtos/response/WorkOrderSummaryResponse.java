@@ -1,4 +1,4 @@
-package com.femcoders.fixly.workorder.dtos;
+package com.femcoders.fixly.workorder.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

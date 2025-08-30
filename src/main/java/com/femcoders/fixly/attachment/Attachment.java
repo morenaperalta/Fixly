@@ -1,8 +1,8 @@
 package com.femcoders.fixly.attachment;
 
-import com.femcoders.fixly.comment.Comment;
-import com.femcoders.fixly.user.User;
-import com.femcoders.fixly.workorder.WorkOrder;
+import com.femcoders.fixly.comment.entities.Comment;
+import com.femcoders.fixly.user.entities.User;
+import com.femcoders.fixly.workorder.entities.WorkOrder;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

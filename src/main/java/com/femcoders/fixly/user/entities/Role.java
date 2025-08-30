@@ -1,4 +1,4 @@
-package com.femcoders.fixly.user;
+package com.femcoders.fixly.user.entities;
 
 public enum Role {
     ADMIN,

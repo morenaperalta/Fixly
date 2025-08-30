@@ -1,17 +1,18 @@
 package com.femcoders.fixly.workorder;
 
-import com.femcoders.fixly.user.Role;
-import com.femcoders.fixly.user.User;
+import com.femcoders.fixly.user.entities.Role;
+import com.femcoders.fixly.user.entities.User;
 import com.femcoders.fixly.user.services.UserServiceImpl;
-import com.femcoders.fixly.workorder.dtos.CreateWorkOrderRequest;
-import com.femcoders.fixly.workorder.dtos.WorkOrderSummaryResponse;
-import com.femcoders.fixly.workorder.dtos.WorkOrderResponseForAdmin;
-import com.femcoders.fixly.workorder.dtos.WorkOrderResponseForTechnician;
-import com.femcoders.fixly.workorder.enums.Status;
-import com.femcoders.fixly.workorder.enums.SupervisionStatus;
-import com.femcoders.fixly.workorder.services.WorkOrderIdentifierService;
-import com.femcoders.fixly.workorder.services.WorkOrderMapperService;
-import com.femcoders.fixly.workorder.services.WorkOrderService;
+import com.femcoders.fixly.workorder.dtos.request.CreateWorkOrderRequest;
+import com.femcoders.fixly.workorder.dtos.response.WorkOrderSummaryResponse;
+import com.femcoders.fixly.workorder.dtos.response.WorkOrderResponseForAdmin;
+import com.femcoders.fixly.workorder.dtos.response.WorkOrderResponseForTechnician;
+import com.femcoders.fixly.workorder.entities.Status;
+import com.femcoders.fixly.workorder.entities.SupervisionStatus;
+import com.femcoders.fixly.workorder.entities.WorkOrder;
+import com.femcoders.fixly.workorder.services.WorkOrderIdentifierServiceImpl;
+import com.femcoders.fixly.workorder.services.WorkOrderMapperServiceImpl;
+import com.femcoders.fixly.workorder.services.WorkOrderServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Tests for WorkOrderService")
-class WorkOrderServiceTest {
+class WorkOrderServiceImplTest {
 
     @Mock
     private WorkOrderRepository workOrderRepository;
@@ -40,13 +41,13 @@ class WorkOrderServiceTest {
     private UserServiceImpl userService;
 
     @Mock
-    private WorkOrderIdentifierService identifierService;
+    private WorkOrderIdentifierServiceImpl identifierService;
 
     @Mock
-    private WorkOrderMapperService mapperService;
+    private WorkOrderMapperServiceImpl mapperService;
 
     @InjectMocks
-    private WorkOrderService workOrderService;
+    private WorkOrderServiceImpl workOrderService;
 
     private CreateWorkOrderRequest createWorkOrderRequest;
     private User authenticatedUser;

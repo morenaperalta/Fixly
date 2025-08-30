@@ -1,6 +1,6 @@
 package com.femcoders.fixly.comment.dtos;
 
-import com.femcoders.fixly.comment.Comment;
+import com.femcoders.fixly.comment.entities.Comment;
 
 public final class CommentMapper {
     private CommentMapper(){

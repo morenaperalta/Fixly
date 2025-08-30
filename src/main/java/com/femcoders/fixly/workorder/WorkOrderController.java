@@ -1,7 +1,8 @@
 package com.femcoders.fixly.workorder;
 
-import com.femcoders.fixly.workorder.dtos.*;
-import com.femcoders.fixly.workorder.services.WorkOrderService;
+import com.femcoders.fixly.workorder.dtos.request.CreateWorkOrderRequest;
+import com.femcoders.fixly.workorder.dtos.response.*;
+import com.femcoders.fixly.workorder.services.WorkOrderServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -21,7 +22,7 @@ import java.util.List;
 @RequestMapping("/api/workorders")
 @RequiredArgsConstructor
 public class WorkOrderController {
-    private final WorkOrderService workOrderService;
+    private final WorkOrderServiceImpl workOrderService;
 
     @Operation(summary = "Create work order", description = "Create a work order. Available to CLIENT and ADMIN roles."
     )

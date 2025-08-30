@@ -1,6 +1,6 @@
 package com.femcoders.fixly.auth.dtos;
 
-import com.femcoders.fixly.user.User;
+import com.femcoders.fixly.user.entities.User;
 
 public class AuthMapper {
     public static User registrationToEntity(RegistrationRequest request) {

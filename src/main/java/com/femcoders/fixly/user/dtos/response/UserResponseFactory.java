@@ -1,6 +1,6 @@
 package com.femcoders.fixly.user.dtos.response;
 
-import com.femcoders.fixly.user.User;
+import com.femcoders.fixly.user.entities.User;
 import com.femcoders.fixly.user.services.UserAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

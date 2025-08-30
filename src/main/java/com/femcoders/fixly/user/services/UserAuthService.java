@@ -2,7 +2,7 @@ package com.femcoders.fixly.user.services;
 
 import com.femcoders.fixly.shared.exception.EntityNotFoundException;
 import com.femcoders.fixly.shared.security.CustomUserDetails;
-import com.femcoders.fixly.user.User;
+import com.femcoders.fixly.user.entities.User;
 import com.femcoders.fixly.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

@@ -1,4 +1,4 @@
-package com.femcoders.fixly.user;
+package com.femcoders.fixly.user.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

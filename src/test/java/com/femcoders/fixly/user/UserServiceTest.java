@@ -3,6 +3,8 @@ package com.femcoders.fixly.user;
 import com.femcoders.fixly.shared.security.CustomUserDetails;
 import com.femcoders.fixly.user.dtos.response.UserResponse;
 import com.femcoders.fixly.user.dtos.response.UserResponseForAdmin;
+import com.femcoders.fixly.user.entities.Role;
+import com.femcoders.fixly.user.entities.User;
 import com.femcoders.fixly.user.services.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

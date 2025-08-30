@@ -1,8 +1,8 @@
-package com.femcoders.fixly.workorder.dtos;
+package com.femcoders.fixly.workorder.dtos.response;
 
 import com.femcoders.fixly.user.services.UserAuthService;
-import com.femcoders.fixly.workorder.WorkOrder;
-import com.femcoders.fixly.workorder.services.WorkOrderMapperService;
+import com.femcoders.fixly.workorder.entities.WorkOrder;
+import com.femcoders.fixly.workorder.services.WorkOrderMapperServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class WorkOrderResponseFactory {
-    private final WorkOrderMapperService mapperService;
+    private final WorkOrderMapperServiceImpl mapperService;
     private final UserAuthService userAuthService;
 
     public WorkOrderResponse createWorkOrderResponseByRole(WorkOrder workOrder, Authentication auth) {

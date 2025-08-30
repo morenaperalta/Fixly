@@ -1,9 +1,9 @@
 package com.femcoders.fixly.status_history;
 
-import com.femcoders.fixly.user.User;
-import com.femcoders.fixly.workorder.enums.Status;
-import com.femcoders.fixly.workorder.enums.SupervisionStatus;
-import com.femcoders.fixly.workorder.WorkOrder;
+import com.femcoders.fixly.user.entities.User;
+import com.femcoders.fixly.workorder.entities.Status;
+import com.femcoders.fixly.workorder.entities.SupervisionStatus;
+import com.femcoders.fixly.workorder.entities.WorkOrder;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

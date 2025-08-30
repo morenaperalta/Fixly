@@ -1,11 +1,8 @@
-package com.femcoders.fixly.workorder;
+package com.femcoders.fixly.workorder.entities;
 
 import com.femcoders.fixly.attachment.Attachment;
-import com.femcoders.fixly.comment.Comment;
-import com.femcoders.fixly.user.User;
-import com.femcoders.fixly.workorder.enums.Priority;
-import com.femcoders.fixly.workorder.enums.Status;
-import com.femcoders.fixly.workorder.enums.SupervisionStatus;
+import com.femcoders.fixly.comment.entities.Comment;
+import com.femcoders.fixly.user.entities.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

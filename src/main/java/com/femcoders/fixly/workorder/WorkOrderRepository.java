@@ -1,6 +1,7 @@
 package com.femcoders.fixly.workorder;
 
-import com.femcoders.fixly.user.User;
+import com.femcoders.fixly.user.entities.User;
+import com.femcoders.fixly.workorder.entities.WorkOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

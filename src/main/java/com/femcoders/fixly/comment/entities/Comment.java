@@ -1,8 +1,8 @@
-package com.femcoders.fixly.comment;
+package com.femcoders.fixly.comment.entities;
 
 import com.femcoders.fixly.attachment.Attachment;
-import com.femcoders.fixly.user.User;
-import com.femcoders.fixly.workorder.WorkOrder;
+import com.femcoders.fixly.user.entities.User;
+import com.femcoders.fixly.workorder.entities.WorkOrder;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -12,7 +12,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor

@@ -1,7 +1,7 @@
 package com.femcoders.fixly.user.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.femcoders.fixly.user.Role;
+import com.femcoders.fixly.user.entities.Role;
 
 import java.time.LocalDateTime;
 

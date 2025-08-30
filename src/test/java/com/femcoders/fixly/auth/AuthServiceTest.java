@@ -7,7 +7,7 @@ import com.femcoders.fixly.auth.services.AuthServiceImpl;
 import com.femcoders.fixly.shared.exception.EntityAlreadyExistsException;
 import com.femcoders.fixly.shared.security.CustomUserDetails;
 import com.femcoders.fixly.shared.security.jwt.JwtService;
-import com.femcoders.fixly.user.User;
+import com.femcoders.fixly.user.entities.User;
 import com.femcoders.fixly.user.UserRepository;
 import com.femcoders.fixly.user.dtos.response.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
