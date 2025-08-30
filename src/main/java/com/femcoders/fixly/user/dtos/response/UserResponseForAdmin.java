@@ -1,4 +1,4 @@
-package com.femcoders.fixly.user.dtos;
+package com.femcoders.fixly.user.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.femcoders.fixly.user.Role;

@@ -1,8 +1,9 @@
 package com.femcoders.fixly.user;
 
 import com.femcoders.fixly.shared.exception.ErrorResponse;
-import com.femcoders.fixly.user.dtos.UserResponse;
-import com.femcoders.fixly.user.dtos.UserResponseForAdmin;
+import com.femcoders.fixly.user.dtos.response.UserResponse;
+import com.femcoders.fixly.user.dtos.response.UserResponseForAdmin;
+import com.femcoders.fixly.user.services.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,7 +27,7 @@ import java.util.List;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @Operation(summary = "Get users", description = "Retrieve a list of all users. Available to SUPERVISOR and ADMIN roles.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "List of users retrieved successfully", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserResponseForAdmin.class)))), @ApiResponse(responseCode = "401", description = "Authentication required - JWT token missing or invalid", content = @Content(schema = @Schema(implementation = ErrorResponse.class))), @ApiResponse(responseCode = "403", description = "Access denied - Insufficient permissions (requires ADMIN or SUPERVISOR role)", content = @Content(schema = @Schema(implementation = ErrorResponse.class))), @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})

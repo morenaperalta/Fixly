@@ -1,6 +1,10 @@
 package com.femcoders.fixly.user.dtos;
 
 import com.femcoders.fixly.user.User;
+import com.femcoders.fixly.user.dtos.request.UserUpdateRequest;
+import com.femcoders.fixly.user.dtos.request.UserUpdateRequestForAdmin;
+import com.femcoders.fixly.user.dtos.response.UserResponseForAdmin;
+import com.femcoders.fixly.user.dtos.response.UserSummaryResponse;
 
 public final class UserMapper {
     private UserMapper() {

@@ -1,4 +1,4 @@
-package com.femcoders.fixly.user.dtos;
+package com.femcoders.fixly.user.dtos.response;
 
 import com.femcoders.fixly.user.User;
 import org.springframework.security.core.Authentication;
@@ -22,26 +22,18 @@ public class UserResponseFactory {
     }
 
     private String extractRole(Authentication auth) {
-        return auth.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst()
-                .orElse("ROLE_CLIENT");
+        return auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().orElse("ROLE_CLIENT");
     }
 
     private UserResponseForAdmin createAdminResponse(User user) {
-        return new UserResponseForAdmin(user.getId(), user.getUsername(), user.getEmail(),
-                user.getFirstName(), user.getLastName(), user.getCompany(), user.getRole(),
-                user.getCreatedAt(), user.getUpdatedAt());
+        return new UserResponseForAdmin(user.getId(), user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCompany(), user.getRole(), user.getCreatedAt(), user.getUpdatedAt());
     }
 
     private UserSummaryResponse createUserSummaryResponse(User user) {
-        return new UserSummaryResponse(user.getUsername(), user.getEmail(), user.getFirstName(),
-                user.getLastName(), user.getCompany());
+        return new UserSummaryResponse(user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCompany());
     }
 
     public List<UserResponse> createResponseList(List<User> users, Authentication auth) {
-        return users.stream()
-                .map(user -> createUserResponseByRole(user, auth))
-                .toList();
+        return users.stream().map(user -> createUserResponseByRole(user, auth)).toList();
     }
 }

@@ -5,7 +5,7 @@ import com.femcoders.fixly.attachment.dtos.AttachmentResponse;
 import com.femcoders.fixly.comment.dtos.CommentMapper;
 import com.femcoders.fixly.comment.dtos.CommentResponse;
 import com.femcoders.fixly.user.dtos.UserMapper;
-import com.femcoders.fixly.user.dtos.UserSummaryResponse;
+import com.femcoders.fixly.user.dtos.response.UserSummaryResponse;
 import com.femcoders.fixly.workorder.WorkOrder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

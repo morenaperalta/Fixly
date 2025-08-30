@@ -3,12 +3,13 @@ package com.femcoders.fixly.auth;
 import com.femcoders.fixly.auth.dtos.JwtResponse;
 import com.femcoders.fixly.auth.dtos.LoginRequest;
 import com.femcoders.fixly.auth.dtos.RegistrationRequest;
+import com.femcoders.fixly.auth.services.AuthServiceImpl;
 import com.femcoders.fixly.shared.exception.EntityAlreadyExistsException;
 import com.femcoders.fixly.shared.security.CustomUserDetails;
 import com.femcoders.fixly.shared.security.jwt.JwtService;
 import com.femcoders.fixly.user.User;
 import com.femcoders.fixly.user.UserRepository;
-import com.femcoders.fixly.user.dtos.UserResponse;
+import com.femcoders.fixly.user.dtos.response.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -44,7 +45,7 @@ class AuthServiceTest {
     private CustomUserDetails userDetails;
 
     @InjectMocks
-    private AuthService authService;
+    private AuthServiceImpl authService;
 
     private RegistrationRequest registrationRequest;
     private User savedUser;

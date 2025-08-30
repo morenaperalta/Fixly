@@ -2,7 +2,7 @@ package com.femcoders.fixly.workorder;
 
 import com.femcoders.fixly.user.Role;
 import com.femcoders.fixly.user.User;
-import com.femcoders.fixly.user.UserService;
+import com.femcoders.fixly.user.services.UserServiceImpl;
 import com.femcoders.fixly.workorder.dtos.CreateWorkOrderRequest;
 import com.femcoders.fixly.workorder.dtos.WorkOrderResponse;
 import com.femcoders.fixly.workorder.dtos.WorkOrderResponseForAdminAndSupervisor;
@@ -37,7 +37,7 @@ class WorkOrderServiceTest {
     private WorkOrderRepository workOrderRepository;
 
     @Mock
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Mock
     private WorkOrderIdentifierService identifierService;

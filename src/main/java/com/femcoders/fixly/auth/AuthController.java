@@ -3,9 +3,10 @@ package com.femcoders.fixly.auth;
 import com.femcoders.fixly.auth.dtos.JwtResponse;
 import com.femcoders.fixly.auth.dtos.LoginRequest;
 import com.femcoders.fixly.auth.dtos.RegistrationRequest;
+import com.femcoders.fixly.auth.services.AuthServiceImpl;
 import com.femcoders.fixly.shared.exception.ErrorResponse;
 import com.femcoders.fixly.shared.security.jwt.JwtService;
-import com.femcoders.fixly.user.dtos.UserResponse;
+import com.femcoders.fixly.user.dtos.response.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthService authService;
+    private final AuthServiceImpl authService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 

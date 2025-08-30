@@ -1,8 +1,9 @@
 package com.femcoders.fixly.user;
 
 import com.femcoders.fixly.shared.security.CustomUserDetails;
-import com.femcoders.fixly.user.dtos.UserResponse;
-import com.femcoders.fixly.user.dtos.UserResponseForAdmin;
+import com.femcoders.fixly.user.dtos.response.UserResponse;
+import com.femcoders.fixly.user.dtos.response.UserResponseForAdmin;
+import com.femcoders.fixly.user.services.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -32,7 +33,7 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
 
     private User user1;
     private User user2;

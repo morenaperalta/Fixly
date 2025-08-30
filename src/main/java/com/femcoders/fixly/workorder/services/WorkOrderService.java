@@ -2,7 +2,8 @@ package com.femcoders.fixly.workorder.services;
 
 import com.femcoders.fixly.shared.exception.EntityNotFoundException;
 import com.femcoders.fixly.user.User;
-import com.femcoders.fixly.user.UserService;
+import com.femcoders.fixly.user.services.UserAuthService;
+import com.femcoders.fixly.user.services.UserServiceImpl;
 import com.femcoders.fixly.workorder.WorkOrder;
 import com.femcoders.fixly.workorder.WorkOrderRepository;
 import com.femcoders.fixly.workorder.dtos.*;
@@ -22,7 +23,8 @@ public class WorkOrderService {
     private static final String IDENTIFIER_FIELD = "identifier";
     private final WorkOrderRepository workOrderRepository;
     private final WorkOrderIdentifierService identifierService;
-    private final UserService userService;
+    private final UserAuthService userAuthService;
+    private final UserServiceImpl userService;
     private final WorkOrderMapperService mapperService;
 
     @Transactional
@@ -31,7 +33,7 @@ public class WorkOrderService {
         String identifier = identifierService.generateIdentifier();
         workOrder.setIdentifier(identifier);
 
-        User user = userService.getAuthenticatedUser();
+        User user = userAuthService.getAuthenticatedUser();
         workOrder.setCreatedBy(user);
 
         if (workOrder.getStatus() == null) {
@@ -57,21 +59,21 @@ public class WorkOrderService {
 
     @Transactional(readOnly = true)
     public List<WorkOrderResponseForTechnician> getWorkOrdersAssigned() {
-        User user = userService.getAuthenticatedUser();
+        User user = userAuthService.getAuthenticatedUser();
         List<WorkOrder> workOrders = workOrderRepository.findByAssignedToContaining(user);
         return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseTechToDto(workOrder,mapperService)).toList();
     }
 
     @Transactional(readOnly = true)
     public List<WorkOrderResponseForAdminAndSupervisor> getWorkOrdersSupervised() {
-        User user = userService.getAuthenticatedUser();
+        User user = userAuthService.getAuthenticatedUser();
         List<WorkOrder> workOrders = workOrderRepository.findBySupervisedBy(user);
         return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder, mapperService)).toList();
     }
 
     @Transactional(readOnly = true)
     public List<WorkOrderResponseForClient> getWorkOrdersCreatedByClient() {
-        User user = userService.getAuthenticatedUser();
+        User user = userAuthService.getAuthenticatedUser();
         List<WorkOrder> workOrders = workOrderRepository.findByCreatedBy(user);
         return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseClientToDto(workOrder, mapperService)).toList();
     }
@@ -85,7 +87,7 @@ public class WorkOrderService {
 
     @Transactional(readOnly = true)
     public WorkOrderResponseForAdminAndSupervisor getWorkOrderByIdForSupervisor(Long id){
-        User supervisor = userService.getAuthenticatedUser();
+        User supervisor = userAuthService.getAuthenticatedUser();
         WorkOrder workOrder = workOrderRepository.findByIdAndSupervisedBy(id, supervisor)
                 .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, id.toString()));
         return WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder, mapperService);
@@ -93,7 +95,7 @@ public class WorkOrderService {
 
     @Transactional(readOnly = true)
     public WorkOrderResponseForTechnician getWorkOrderByIdentifierForTechnician(String identifier){
-        User technician = userService.getAuthenticatedUser();
+        User technician = userAuthService.getAuthenticatedUser();
         WorkOrder workOrder = workOrderRepository.findByIdentifierAndAssignedToContaining(identifier, technician)
                 .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier));
         return WorkOrderMapper.workOrderResponseTechToDto(workOrder, mapperService);
@@ -101,7 +103,7 @@ public class WorkOrderService {
 
     @Transactional(readOnly = true)
     public WorkOrderResponseForClient getWorkOrderByIdentifierForClient(String identifier){
-        User client = userService.getAuthenticatedUser();
+        User client = userAuthService.getAuthenticatedUser();
         WorkOrder workOrder = workOrderRepository.findByIdentifierAndCreatedBy(identifier, client)
                 .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier));
         return WorkOrderMapper.workOrderResponseClientToDto(workOrder, mapperService);

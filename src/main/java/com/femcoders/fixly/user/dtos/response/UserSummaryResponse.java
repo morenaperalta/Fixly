@@ -1,4 +1,4 @@
-package com.femcoders.fixly.user.dtos;
+package com.femcoders.fixly.user.dtos.response;
 
 public record UserSummaryResponse(
         String username,

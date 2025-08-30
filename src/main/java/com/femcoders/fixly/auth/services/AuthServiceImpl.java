@@ -1,4 +1,4 @@
-package com.femcoders.fixly.auth;
+package com.femcoders.fixly.auth.services;
 
 import com.femcoders.fixly.auth.dtos.AuthMapper;
 import com.femcoders.fixly.auth.dtos.JwtResponse;
@@ -10,7 +10,7 @@ import com.femcoders.fixly.user.User;
 import com.femcoders.fixly.user.UserRepository;
 import com.femcoders.fixly.user.dtos.UserMapper;
 import com.femcoders.fixly.auth.dtos.RegistrationRequest;
-import com.femcoders.fixly.user.dtos.UserResponse;
+import com.femcoders.fixly.user.dtos.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,13 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthServiceImpl implements AuthService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
     @Transactional
+    @Override
     public UserResponse register(RegistrationRequest request){
         if(userRepository.existsByUsername(request.username())){
             throw new EntityAlreadyExistsException(User.class.getSimpleName(), "username", request.username());
@@ -42,6 +43,7 @@ public class AuthService {
     }
 
     @Transactional
+    @Override
     public JwtResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password())

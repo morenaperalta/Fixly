@@ -3,7 +3,7 @@ package com.femcoders.fixly.workorder.dtos;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.femcoders.fixly.attachment.dtos.AttachmentResponse;
 import com.femcoders.fixly.comment.dtos.CommentResponse;
-import com.femcoders.fixly.user.dtos.UserSummaryResponse;
+import com.femcoders.fixly.user.dtos.response.UserSummaryResponse;
 import com.femcoders.fixly.workorder.enums.Priority;
 import com.femcoders.fixly.workorder.enums.Status;
 import com.femcoders.fixly.workorder.enums.SupervisionStatus;
