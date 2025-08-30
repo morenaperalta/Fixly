@@ -25,6 +25,7 @@ public record WorkOrderResponseForAdmin(
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime updatedAt,
         UserSummaryResponse createdBy,
+        UserSummaryResponse supervisedBy,
         List<UserSummaryResponse> assignedTo,
         List<CommentResponse> comments,
         List<AttachmentResponse> attachments

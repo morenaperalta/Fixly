@@ -19,6 +19,10 @@ public class WorkOrderMapperServiceImpl implements WorkOrderMapperService{
         return workOrder.getCreatedBy() != null ? UserMapper.userSummaryResponseToDto(workOrder.getCreatedBy()) : null;
     }
 
+    public UserSummaryResponse mapSupervisedBy(WorkOrder workOrder) {
+        return workOrder.getSupervisedBy() != null ? UserMapper.userSummaryResponseToDto(workOrder.getSupervisedBy()) : null;
+    }
+
     public List<UserSummaryResponse> mapAssignedTo(WorkOrder workOrder) {
         return workOrder.getAssignedTo() != null ? workOrder.getAssignedTo().stream().map(UserMapper::userSummaryResponseToDto).toList() : null;
     }

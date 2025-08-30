@@ -23,7 +23,7 @@ public final class WorkOrderMapper {
 
     public static WorkOrderResponseForAdmin workOrderResponseAdminSupToDto(WorkOrder workOrder, WorkOrderMapperServiceImpl workOrderMapperService) {
 
-        return new WorkOrderResponseForAdmin(workOrder.getId(), workOrder.getIdentifier(), workOrder.getTitle(), workOrder.getDescription(), workOrder.getLocation(), workOrder.getStatus(), workOrder.getPriority(), workOrder.getSupervisionStatus(), workOrder.getCreatedAt(), workOrder.getUpdatedAt(), workOrderMapperService.mapCreatedBy(workOrder), workOrderMapperService.mapAssignedTo(workOrder), workOrderMapperService.mapComment(workOrder), workOrderMapperService.mapAttachment(workOrder));
+        return new WorkOrderResponseForAdmin(workOrder.getId(), workOrder.getIdentifier(), workOrder.getTitle(), workOrder.getDescription(), workOrder.getLocation(), workOrder.getStatus(), workOrder.getPriority(), workOrder.getSupervisionStatus(), workOrder.getCreatedAt(), workOrder.getUpdatedAt(), workOrderMapperService.mapCreatedBy(workOrder), workOrderMapperService.mapSupervisedBy(workOrder),workOrderMapperService.mapAssignedTo(workOrder), workOrderMapperService.mapComment(workOrder), workOrderMapperService.mapAttachment(workOrder));
     }
 
     public static WorkOrderResponseForTechnician workOrderResponseTechToDto(WorkOrder workOrder, WorkOrderMapperServiceImpl workOrderMapperService) {

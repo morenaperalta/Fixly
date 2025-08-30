@@ -27,7 +27,7 @@ public class WorkOrderResponseFactory {
     }
 
     public WorkOrderResponseForAdmin createAdminResponse(WorkOrder workOrder) {
-        return new WorkOrderResponseForAdmin(workOrder.getId(), workOrder.getIdentifier(), workOrder.getTitle(), workOrder.getDescription(), workOrder.getLocation(), workOrder.getStatus(), workOrder.getPriority(), workOrder.getSupervisionStatus(), workOrder.getCreatedAt(), workOrder.getUpdatedAt(), mapperService.mapCreatedBy(workOrder), mapperService.mapAssignedTo(workOrder), mapperService.mapComment(workOrder), mapperService.mapAttachment(workOrder));
+        return new WorkOrderResponseForAdmin(workOrder.getId(), workOrder.getIdentifier(), workOrder.getTitle(), workOrder.getDescription(), workOrder.getLocation(), workOrder.getStatus(), workOrder.getPriority(), workOrder.getSupervisionStatus(), workOrder.getCreatedAt(), workOrder.getUpdatedAt(), mapperService.mapCreatedBy(workOrder), mapperService.mapSupervisedBy(workOrder),mapperService.mapAssignedTo(workOrder), mapperService.mapComment(workOrder), mapperService.mapAttachment(workOrder));
     }
 
     public WorkOrderResponseForTechnician createWorkOrderResponseForTechnician(WorkOrder workOrder) {
