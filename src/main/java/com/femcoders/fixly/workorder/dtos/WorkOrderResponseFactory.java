@@ -1,10 +1,10 @@
 package com.femcoders.fixly.workorder.dtos;
 
+import com.femcoders.fixly.user.services.UserAuthService;
 import com.femcoders.fixly.workorder.WorkOrder;
 import com.femcoders.fixly.workorder.services.WorkOrderMapperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,9 +13,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WorkOrderResponseFactory {
     private final WorkOrderMapperService mapperService;
+    private final UserAuthService userAuthService;
 
     public WorkOrderResponse createWorkOrderResponseByRole(WorkOrder workOrder, Authentication auth) {
-        String role = extractRole(auth);
+        String role = userAuthService.extractRole(auth);
 
         return switch (role) {
             case "ROLE_ADMIN", "ROLE_SUPERVISOR" -> createAdminResponse(workOrder);
@@ -23,10 +24,6 @@ public class WorkOrderResponseFactory {
             case "ROLE_CLIENT" -> createWorkOrderResponseForClient(workOrder);
             default -> throw new IllegalArgumentException("Unknown role: " + role);
         };
-    }
-
-    private String extractRole(Authentication auth) {
-        return auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().orElse("NO_ROLE");
     }
 
     public WorkOrderResponseForAdmin createAdminResponse(WorkOrder workOrder) {

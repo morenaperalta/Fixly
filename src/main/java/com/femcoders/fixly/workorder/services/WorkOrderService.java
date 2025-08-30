@@ -54,37 +54,18 @@ public class WorkOrderService {
 
     @Transactional(readOnly = true)
     public List<WorkOrderResponse> getAllWorkOrders(Authentication auth) {
-        List<WorkOrder> workOrders = workOrderRepository.findAll();
+        String role = userAuthService.extractRole(auth);
+        User user = userAuthService.getAuthenticatedUser();
+        List<WorkOrder> workOrders;
+        switch (role) {
+            case "ROLE_ADMIN" -> workOrders = workOrderRepository.findAll();
+            case "ROLE_SUPERVISOR" -> workOrders = workOrderRepository.findBySupervisedBy(user);
+            case "ROLE_TECHNICIAN" -> workOrders = workOrderRepository.findByAssignedToContaining(user);
+            case "ROLE_CLIENT" -> workOrders = workOrderRepository.findByCreatedBy(user);
+            default -> throw new IllegalArgumentException("Unknown role: " + role);
+        }
         return workOrderResponseFactory.createResponseList(workOrders, auth);
     }
-
-//    @Transactional(readOnly = true)
-//    public List<WorkOrderResponseForAdmin> getAllWorkOrders() {
-//
-//        List<WorkOrder> workOrders = workOrderRepository.findAll();
-//        return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder, mapperService)).toList();
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public List<WorkOrderResponseForTechnician> getWorkOrdersAssigned() {
-//        User user = userAuthService.getAuthenticatedUser();
-//        List<WorkOrder> workOrders = workOrderRepository.findByAssignedToContaining(user);
-//        return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseTechToDto(workOrder,mapperService)).toList();
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public List<WorkOrderResponseForAdmin> getWorkOrdersSupervised() {
-//        User user = userAuthService.getAuthenticatedUser();
-//        List<WorkOrder> workOrders = workOrderRepository.findBySupervisedBy(user);
-//        return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder, mapperService)).toList();
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public List<WorkOrderResponseForClient> getWorkOrdersCreatedByClient() {
-//        User user = userAuthService.getAuthenticatedUser();
-//        List<WorkOrder> workOrders = workOrderRepository.findByCreatedBy(user);
-//        return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseClientToDto(workOrder, mapperService)).toList();
-//    }
 
     @Transactional(readOnly = true)
     public WorkOrderResponseForAdmin getWorkOrderByIdForAdmin(Long id){

@@ -5,6 +5,8 @@ import com.femcoders.fixly.shared.security.CustomUserDetails;
 import com.femcoders.fixly.user.User;
 import com.femcoders.fixly.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,5 +31,9 @@ public class UserAuthService implements UserDetailsService {
         String username = userDetails.getUsername();
 
         return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(User.class.getSimpleName(), USERNAME_FIELD, username));
+    }
+
+    public String extractRole(Authentication auth) {
+        return auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().orElse("NO_ROLE");
     }
 }
