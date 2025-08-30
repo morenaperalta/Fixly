@@ -11,7 +11,7 @@ import com.femcoders.fixly.workorder.enums.SupervisionStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record WorkOrderResponseForAdminAndSupervisor(
+public record WorkOrderResponseForAdmin(
         Long id,
         String identifier,
         String title,
@@ -28,7 +28,7 @@ public record WorkOrderResponseForAdminAndSupervisor(
         List<UserSummaryResponse> assignedTo,
         List<CommentResponse> comments,
         List<AttachmentResponse> attachments
-) {
+) implements WorkOrderResponse {
 
 }
 

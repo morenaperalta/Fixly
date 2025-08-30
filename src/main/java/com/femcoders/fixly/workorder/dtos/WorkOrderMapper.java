@@ -12,13 +12,13 @@ public final class WorkOrderMapper {
         return WorkOrder.builder().title(request.title().trim()).description(request.description().trim()).location(request.location().trim()).build();
     }
 
-    public static WorkOrderResponse workOrderToDto(WorkOrder workorder) {
-        return new WorkOrderResponse(workorder.getIdentifier(), workorder.getTitle(), workorder.getDescription(), workorder.getLocation(), workorder.getCreatedAt());
+    public static WorkOrderSummaryResponse workOrderToDto(WorkOrder workorder) {
+        return new WorkOrderSummaryResponse(workorder.getIdentifier(), workorder.getTitle(), workorder.getDescription(), workorder.getLocation(), workorder.getCreatedAt());
     }
 
-    public static WorkOrderResponseForAdminAndSupervisor workOrderResponseAdminSupToDto(WorkOrder workOrder, WorkOrderMapperService workOrderMapperService) {
+    public static WorkOrderResponseForAdmin workOrderResponseAdminSupToDto(WorkOrder workOrder, WorkOrderMapperService workOrderMapperService) {
 
-        return new WorkOrderResponseForAdminAndSupervisor(workOrder.getId(), workOrder.getIdentifier(), workOrder.getTitle(), workOrder.getDescription(), workOrder.getLocation(), workOrder.getStatus(), workOrder.getPriority(), workOrder.getSupervisionStatus(), workOrder.getCreatedAt(), workOrder.getUpdatedAt(), workOrderMapperService.mapCreatedBy(workOrder), workOrderMapperService.mapAssignedTo(workOrder), workOrderMapperService.mapComment(workOrder), workOrderMapperService.mapAttachment(workOrder));
+        return new WorkOrderResponseForAdmin(workOrder.getId(), workOrder.getIdentifier(), workOrder.getTitle(), workOrder.getDescription(), workOrder.getLocation(), workOrder.getStatus(), workOrder.getPriority(), workOrder.getSupervisionStatus(), workOrder.getCreatedAt(), workOrder.getUpdatedAt(), workOrderMapperService.mapCreatedBy(workOrder), workOrderMapperService.mapAssignedTo(workOrder), workOrderMapperService.mapComment(workOrder), workOrderMapperService.mapAttachment(workOrder));
     }
 
     public static WorkOrderResponseForTechnician workOrderResponseTechToDto(WorkOrder workOrder, WorkOrderMapperService workOrderMapperService) {
@@ -26,7 +26,6 @@ public final class WorkOrderMapper {
     }
 
     public static WorkOrderResponseForClient workOrderResponseClientToDto(WorkOrder workOrder, WorkOrderMapperService workOrderMapperService) {
-
-        return new WorkOrderResponseForClient(workOrder.getIdentifier(), workOrder.getTitle(), workOrder.getDescription(), workOrder.getLocation(), workOrder.getStatus(), workOrder.getCreatedAt(), workOrder.getUpdatedAt(), workOrderMapperService.mapAttachment(workOrder));
+        return new WorkOrderResponseForClient(workOrder.getIdentifier(), workOrder.getTitle(), workOrder.getDescription(), workOrder.getLocation(), workOrder.getStatus(), workOrder.getCreatedAt(), workOrder.getUpdatedAt(),workOrderMapperService.mapComment(workOrder), workOrderMapperService.mapAttachment(workOrder));
     }
 }

@@ -4,8 +4,8 @@ import com.femcoders.fixly.user.Role;
 import com.femcoders.fixly.user.User;
 import com.femcoders.fixly.user.services.UserServiceImpl;
 import com.femcoders.fixly.workorder.dtos.CreateWorkOrderRequest;
-import com.femcoders.fixly.workorder.dtos.WorkOrderResponse;
-import com.femcoders.fixly.workorder.dtos.WorkOrderResponseForAdminAndSupervisor;
+import com.femcoders.fixly.workorder.dtos.WorkOrderSummaryResponse;
+import com.femcoders.fixly.workorder.dtos.WorkOrderResponseForAdmin;
 import com.femcoders.fixly.workorder.dtos.WorkOrderResponseForTechnician;
 import com.femcoders.fixly.workorder.enums.Status;
 import com.femcoders.fixly.workorder.enums.SupervisionStatus;
@@ -82,7 +82,7 @@ class WorkOrderServiceTest {
             when(userService.getAuthenticatedUser()).thenReturn(authenticatedUser);
             when(workOrderRepository.save(any(WorkOrder.class))).thenReturn(workOrder1);
 
-            WorkOrderResponse result = workOrderService.createWorkOrder(createWorkOrderRequest);
+            WorkOrderSummaryResponse result = workOrderService.createWorkOrder(createWorkOrderRequest);
 
             assertNotNull(result);
             assertEquals(workOrder1.getIdentifier(), result.identifier());
@@ -115,7 +115,7 @@ class WorkOrderServiceTest {
                 return workOrder1;
             });
 
-            WorkOrderResponse result = workOrderService.createWorkOrder(createWorkOrderRequest);
+            WorkOrderSummaryResponse result = workOrderService.createWorkOrder(createWorkOrderRequest);
 
             assertNotNull(result);
             verify(userService, times(1)).getAuthenticatedUser();
@@ -132,7 +132,7 @@ class WorkOrderServiceTest {
         void getAllWorkOrders_whenExistsWorkOrders_returnListOfWorkOrderResponse() {
             when(workOrderRepository.findAll()).thenReturn(List.of(workOrder1, workOrder2));
 
-            List<WorkOrderResponseForAdminAndSupervisor> result = workOrderService.getAllWorkOrders();
+            List<WorkOrderResponseForAdmin> result = workOrderService.getAllWorkOrders();
 
             assertNotNull(result);
             assertEquals(2, result.size());
@@ -149,7 +149,7 @@ class WorkOrderServiceTest {
         void getAllWorkOrders_whenWorkOrdersNotExist_returnEmptyList() {
             when(workOrderRepository.findAll()).thenReturn(Collections.emptyList());
 
-            List<WorkOrderResponseForAdminAndSupervisor> result = workOrderService.getAllWorkOrders();
+            List<WorkOrderResponseForAdmin> result = workOrderService.getAllWorkOrders();
 
             assertNotNull(result);
             assertTrue(result.isEmpty());
@@ -224,7 +224,7 @@ class WorkOrderServiceTest {
             when(userService.getAuthenticatedUser()).thenReturn(supervisor);
             when(workOrderRepository.findBySupervisedBy(supervisor)).thenReturn(List.of(workOrder2));
 
-            List<WorkOrderResponseForAdminAndSupervisor> result = workOrderService.getWorkOrdersSupervised();
+            List<WorkOrderResponseForAdmin> result = workOrderService.getWorkOrdersSupervised();
 
             assertNotNull(result);
             assertEquals(1, result.size());
@@ -241,7 +241,7 @@ class WorkOrderServiceTest {
             when(userService.getAuthenticatedUser()).thenReturn(supervisor);
             when(workOrderRepository.findBySupervisedBy(supervisor)).thenReturn(Collections.emptyList());
 
-            List<WorkOrderResponseForAdminAndSupervisor> result = workOrderService.getWorkOrdersSupervised();
+            List<WorkOrderResponseForAdmin> result = workOrderService.getWorkOrdersSupervised();
 
             assertNotNull(result);
             assertTrue(result.isEmpty());

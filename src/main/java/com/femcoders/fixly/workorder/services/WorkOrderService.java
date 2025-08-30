@@ -11,6 +11,7 @@ import com.femcoders.fixly.workorder.enums.Priority;
 import com.femcoders.fixly.workorder.enums.Status;
 import com.femcoders.fixly.workorder.enums.SupervisionStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +27,10 @@ public class WorkOrderService {
     private final UserAuthService userAuthService;
     private final UserServiceImpl userService;
     private final WorkOrderMapperService mapperService;
+    private final WorkOrderResponseFactory workOrderResponseFactory;
 
     @Transactional
-    public WorkOrderResponse createWorkOrder(CreateWorkOrderRequest request) {
+    public WorkOrderSummaryResponse createWorkOrder(CreateWorkOrderRequest request) {
         WorkOrder workOrder = WorkOrderMapper.createWorkOrderRequestToEntity(request);
         String identifier = identifierService.generateIdentifier();
         workOrder.setIdentifier(identifier);
@@ -51,42 +53,48 @@ public class WorkOrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<WorkOrderResponseForAdminAndSupervisor> getAllWorkOrders() {
-
+    public List<WorkOrderResponse> getAllWorkOrders(Authentication auth) {
         List<WorkOrder> workOrders = workOrderRepository.findAll();
-        return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder, mapperService)).toList();
+        return workOrderResponseFactory.createResponseList(workOrders, auth);
     }
 
-    @Transactional(readOnly = true)
-    public List<WorkOrderResponseForTechnician> getWorkOrdersAssigned() {
-        User user = userAuthService.getAuthenticatedUser();
-        List<WorkOrder> workOrders = workOrderRepository.findByAssignedToContaining(user);
-        return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseTechToDto(workOrder,mapperService)).toList();
-    }
+//    @Transactional(readOnly = true)
+//    public List<WorkOrderResponseForAdmin> getAllWorkOrders() {
+//
+//        List<WorkOrder> workOrders = workOrderRepository.findAll();
+//        return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder, mapperService)).toList();
+//    }
+//
+//    @Transactional(readOnly = true)
+//    public List<WorkOrderResponseForTechnician> getWorkOrdersAssigned() {
+//        User user = userAuthService.getAuthenticatedUser();
+//        List<WorkOrder> workOrders = workOrderRepository.findByAssignedToContaining(user);
+//        return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseTechToDto(workOrder,mapperService)).toList();
+//    }
+//
+//    @Transactional(readOnly = true)
+//    public List<WorkOrderResponseForAdmin> getWorkOrdersSupervised() {
+//        User user = userAuthService.getAuthenticatedUser();
+//        List<WorkOrder> workOrders = workOrderRepository.findBySupervisedBy(user);
+//        return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder, mapperService)).toList();
+//    }
+//
+//    @Transactional(readOnly = true)
+//    public List<WorkOrderResponseForClient> getWorkOrdersCreatedByClient() {
+//        User user = userAuthService.getAuthenticatedUser();
+//        List<WorkOrder> workOrders = workOrderRepository.findByCreatedBy(user);
+//        return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseClientToDto(workOrder, mapperService)).toList();
+//    }
 
     @Transactional(readOnly = true)
-    public List<WorkOrderResponseForAdminAndSupervisor> getWorkOrdersSupervised() {
-        User user = userAuthService.getAuthenticatedUser();
-        List<WorkOrder> workOrders = workOrderRepository.findBySupervisedBy(user);
-        return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder, mapperService)).toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<WorkOrderResponseForClient> getWorkOrdersCreatedByClient() {
-        User user = userAuthService.getAuthenticatedUser();
-        List<WorkOrder> workOrders = workOrderRepository.findByCreatedBy(user);
-        return workOrders.stream().map(workOrder -> WorkOrderMapper.workOrderResponseClientToDto(workOrder, mapperService)).toList();
-    }
-
-    @Transactional(readOnly = true)
-    public WorkOrderResponseForAdminAndSupervisor getWorkOrderByIdForAdmin(Long id){
+    public WorkOrderResponseForAdmin getWorkOrderByIdForAdmin(Long id){
         WorkOrder workOrder = workOrderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, id.toString()));
         return WorkOrderMapper.workOrderResponseAdminSupToDto(workOrder, mapperService);
     }
 
     @Transactional(readOnly = true)
-    public WorkOrderResponseForAdminAndSupervisor getWorkOrderByIdForSupervisor(Long id){
+    public WorkOrderResponseForAdmin getWorkOrderByIdForSupervisor(Long id){
         User supervisor = userAuthService.getAuthenticatedUser();
         WorkOrder workOrder = workOrderRepository.findByIdAndSupervisedBy(id, supervisor)
                 .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, id.toString()));

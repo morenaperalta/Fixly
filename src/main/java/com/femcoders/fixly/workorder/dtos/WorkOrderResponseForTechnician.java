@@ -27,6 +27,6 @@ public record WorkOrderResponseForTechnician(
         List<UserSummaryResponse> assignedTo,
         List<CommentResponse> comments,
         List<AttachmentResponse> attachments
-) {
+) implements WorkOrderResponse {
 }
 
