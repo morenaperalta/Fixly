@@ -25,10 +25,10 @@ import java.util.List;
 public class WorkOrderController {
     private final WorkOrderServiceImpl workOrderService;
 
-    @Operation(summary = "Create work order", description = "Create a work order. Available to CLIENT and ADMIN roles.")
+    @Operation(summary = "Create work order", description = "Create a work order. Available to CLIENT role.")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Work order created successfully"), @ApiResponse(responseCode = "400", description = "Invalid request data"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "403", description = "Forbidden")})
     @PostMapping("")
-    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @PreAuthorize("hasAnyRole('CLIENT')")
     public ResponseEntity<WorkOrderSummaryResponse> createWorkOrder(@Valid @RequestBody CreateWorkOrderRequest request) {
         WorkOrderSummaryResponse workOrderResponse = workOrderService.createWorkOrder(request);
         return new ResponseEntity<>(workOrderResponse, HttpStatus.CREATED);
