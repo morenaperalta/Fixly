@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(InsufficientPermissionsException.class) {
+    @ExceptionHandler(InsufficientPermissionsException.class)
+    public ResponseEntity<ErrorResponse> handleInsufficitnPermissionsException(InsufficientPermissionsException exception, HttpServletRequest req) {
         return buildErrorResponse(HttpStatus.FORBIDDEN, exception.getMessage(), req);
     }
 
