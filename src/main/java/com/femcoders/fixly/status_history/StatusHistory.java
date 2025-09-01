@@ -1,6 +1,7 @@
 package com.femcoders.fixly.status_history;
 
 import com.femcoders.fixly.user.entities.User;
+import com.femcoders.fixly.workorder.entities.Priority;
 import com.femcoders.fixly.workorder.entities.Status;
 import com.femcoders.fixly.workorder.entities.SupervisionStatus;
 import com.femcoders.fixly.workorder.entities.WorkOrder;
@@ -39,6 +40,14 @@ public class StatusHistory {
     @Enumerated(EnumType.STRING)
     @Column(name = "new_supervision_status")
     private SupervisionStatus newSupervisionStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "previous_priority")
+    private Priority previousPriority;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "new_priority")
+    private Priority newPriority;
 
     @ManyToOne
     @JoinColumn(name = "updated_by", nullable = false)
