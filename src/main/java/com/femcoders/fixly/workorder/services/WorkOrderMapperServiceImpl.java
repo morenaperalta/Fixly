@@ -6,8 +6,11 @@ import com.femcoders.fixly.comment.dtos.CommentMapper;
 import com.femcoders.fixly.comment.dtos.CommentResponse;
 import com.femcoders.fixly.user.dtos.UserMapper;
 import com.femcoders.fixly.user.dtos.response.UserSummaryResponse;
+import com.femcoders.fixly.user.services.UserAuthService;
+import com.femcoders.fixly.workorder.dtos.response.WorkOrderResponse;
 import com.femcoders.fixly.workorder.entities.WorkOrder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +18,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class WorkOrderMapperServiceImpl implements WorkOrderMapperService{
+    private final UserAuthService userAuthService;
+
     public UserSummaryResponse mapCreatedBy(WorkOrder workOrder) {
         return workOrder.getCreatedBy() != null ? UserMapper.userSummaryResponseToDto(workOrder.getCreatedBy()) : null;
     }

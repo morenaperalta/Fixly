@@ -3,11 +3,11 @@ package com.femcoders.fixly.workorder.services;
 import com.femcoders.fixly.shared.exception.EntityNotFoundException;
 import com.femcoders.fixly.user.entities.User;
 import com.femcoders.fixly.user.services.UserAuthService;
-import com.femcoders.fixly.user.services.UserServiceImpl;
 import com.femcoders.fixly.workorder.WorkOrderRepository;
 import com.femcoders.fixly.workorder.dtos.WorkOrderMapper;
 import com.femcoders.fixly.workorder.dtos.request.CreateWorkOrderRequest;
-import com.femcoders.fixly.workorder.dtos.response.*;
+import com.femcoders.fixly.workorder.dtos.response.WorkOrderResponse;
+import com.femcoders.fixly.workorder.dtos.response.WorkOrderSummaryResponse;
 import com.femcoders.fixly.workorder.entities.Priority;
 import com.femcoders.fixly.workorder.entities.Status;
 import com.femcoders.fixly.workorder.entities.SupervisionStatus;
@@ -25,11 +25,9 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     private static final String ID_FIELD = "id";
     private static final String IDENTIFIER_FIELD = "identifier";
     private final WorkOrderRepository workOrderRepository;
-    private final WorkOrderIdentifierServiceImpl identifierService;
+    private final WorkOrderIdentifierService identifierService;
     private final UserAuthService userAuthService;
-    private final UserServiceImpl userService;
-    private final WorkOrderMapperServiceImpl mapperService;
-    private final WorkOrderResponseFactory workOrderResponseFactory;
+    private final WorkOrderMapper workOrderMapper;
 
     @Transactional
     public WorkOrderSummaryResponse createWorkOrder(CreateWorkOrderRequest request) {
@@ -66,7 +64,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
             case "ROLE_CLIENT" -> workOrders = workOrderRepository.findByCreatedBy(user);
             default -> throw new IllegalArgumentException("Unknown role: " + role);
         }
-        return workOrderResponseFactory.createResponseList(workOrders, auth);
+        return workOrderMapper.createResponseList(workOrders, auth);
     }
 
     @Transactional(readOnly = true)
@@ -75,14 +73,17 @@ public class WorkOrderServiceImpl implements WorkOrderService {
         User user = userAuthService.getAuthenticatedUser();
         WorkOrder workOrder;
         switch (role) {
-            case "ROLE_ADMIN" -> workOrder = workOrderRepository.findByIdentifier(identifier).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, identifier));
-            case "ROLE_SUPERVISOR" -> workOrder = workOrderRepository.findByIdentifierAndSupervisedBy(identifier, user).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, identifier, "supervised"));
+            case "ROLE_ADMIN" ->
+                    workOrder = workOrderRepository.findByIdentifier(identifier).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, identifier));
+            case "ROLE_SUPERVISOR" ->
+                    workOrder = workOrderRepository.findByIdentifierAndSupervisedBy(identifier, user).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, identifier, "supervised"));
             case "ROLE_TECHNICIAN" ->
                     workOrder = workOrderRepository.findByIdentifierAndAssignedToContaining(identifier, user).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier, "assigned"));
-            case "ROLE_CLIENT" -> workOrder = workOrderRepository.findByIdentifierAndCreatedBy(identifier, user).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier, "created"));
+            case "ROLE_CLIENT" ->
+                    workOrder = workOrderRepository.findByIdentifierAndCreatedBy(identifier, user).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier, "created"));
             default -> throw new IllegalArgumentException("Unknown role: " + role);
         }
 
-        return workOrderResponseFactory.createWorkOrderResponseByRole(workOrder, auth);
+        return workOrderMapper.createWorkOrderResponseByRole(workOrder, auth);
     }
 }
