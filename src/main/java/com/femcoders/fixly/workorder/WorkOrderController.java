@@ -3,7 +3,7 @@ package com.femcoders.fixly.workorder;
 import com.femcoders.fixly.workorder.dtos.request.CreateWorkOrderRequest;
 import com.femcoders.fixly.workorder.dtos.response.WorkOrderResponse;
 import com.femcoders.fixly.workorder.dtos.response.WorkOrderSummaryResponse;
-import com.femcoders.fixly.workorder.services.WorkOrderServiceImpl;
+import com.femcoders.fixly.workorder.services.implementations.WorkOrderServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

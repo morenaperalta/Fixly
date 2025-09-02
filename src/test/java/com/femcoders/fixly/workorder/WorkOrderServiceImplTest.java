@@ -10,9 +10,9 @@ import com.femcoders.fixly.workorder.dtos.response.WorkOrderResponseForTechnicia
 import com.femcoders.fixly.workorder.entities.Status;
 import com.femcoders.fixly.workorder.entities.SupervisionStatus;
 import com.femcoders.fixly.workorder.entities.WorkOrder;
-import com.femcoders.fixly.workorder.services.WorkOrderIdentifierServiceImpl;
-import com.femcoders.fixly.workorder.services.WorkOrderMapperServiceImpl;
-import com.femcoders.fixly.workorder.services.WorkOrderServiceImpl;
+import com.femcoders.fixly.workorder.services.implementations.WorkOrderIdentifierServiceImpl;
+import com.femcoders.fixly.workorder.services.implementations.WorkOrderMapperServiceImpl;
+import com.femcoders.fixly.workorder.services.implementations.WorkOrderServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

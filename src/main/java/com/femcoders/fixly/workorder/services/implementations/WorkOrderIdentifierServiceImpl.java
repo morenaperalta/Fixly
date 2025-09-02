@@ -1,5 +1,6 @@
-package com.femcoders.fixly.workorder.services;
+package com.femcoders.fixly.workorder.services.implementations;
 
+import com.femcoders.fixly.workorder.services.WorkOrderIdentifierService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class WorkOrderIdentifierServiceImpl implements WorkOrderIdentifierService{
+public class WorkOrderIdentifierServiceImpl implements WorkOrderIdentifierService {
     private final SecureRandom secureRandom = new SecureRandom();
 
     public String generateIdentifier() {

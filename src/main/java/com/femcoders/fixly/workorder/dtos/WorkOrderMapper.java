@@ -4,7 +4,7 @@ import com.femcoders.fixly.user.services.UserAuthService;
 import com.femcoders.fixly.workorder.dtos.response.*;
 import com.femcoders.fixly.workorder.entities.WorkOrder;
 import com.femcoders.fixly.workorder.dtos.request.CreateWorkOrderRequest;
-import com.femcoders.fixly.workorder.services.WorkOrderMapperServiceImpl;
+import com.femcoders.fixly.workorder.services.implementations.WorkOrderMapperServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
