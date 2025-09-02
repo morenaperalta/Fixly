@@ -36,4 +36,18 @@ public class UserAuthService implements UserDetailsService {
     public String extractRole(Authentication auth) {
         return auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().orElse("NO_ROLE");
     }
+
+    public boolean isAdmin(String role) {
+        return "ROLE_ADMIN".equals(role);
+    }
+
+    public boolean isSupervisor(String role) {
+        return "ROLE_SUPERVISOR".equals(role);
+    }
+    public boolean isClient(String role) {
+        return "ROLE_CLIENT".equals(role);
+    }
+    public boolean isTechnician(String role) {
+        return "ROLE_TECHNICIAN".equals(role);
+    }
 }
