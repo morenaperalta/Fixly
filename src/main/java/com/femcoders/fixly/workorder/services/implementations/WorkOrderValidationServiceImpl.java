@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class WorkOrderValidationServiceImpl implements WorkOrderValidationService {
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
+    private static final String ROLE_SUPERVISOR = "ROLE_SUPERVISOR";
     private final UserAuthService userAuthService;
 
     @Override
@@ -38,6 +40,28 @@ public class WorkOrderValidationServiceImpl implements WorkOrderValidationServic
     private void validateUserRole(User user, Role expectedRole, String roleName) {
         if (user.getRole() != expectedRole) {
             throw new IllegalArgumentException("User " + user.getUsername() + " is not a " + roleName);
+        }
+    }
+
+    public void validateAccessPermissions(WorkOrder workOrder, User currentUser, String role) {
+        switch (role) {
+            case ROLE_ADMIN -> {}
+            case ROLE_SUPERVISOR -> {
+                if (!workOrder.getSupervisedBy().equals(currentUser)) {
+                    throw new InsufficientPermissionsException("update", "work order not supervised by you");
+                }
+            }
+            case "ROLE_TECHNICIAN" -> {
+                if (workOrder.getAssignedTo() == null || !workOrder.getAssignedTo().contains(currentUser)) {
+                    throw new InsufficientPermissionsException("update", "work order not assigned to you");
+                }
+            }
+            case "ROLE_CLIENT" -> {
+                if (!workOrder.getCreatedBy().equals(currentUser)) {
+                    throw new InsufficientPermissionsException("update", "work order not created by you");
+                }
+            }
+            default -> throw new IllegalArgumentException("Unknown role: " + role);
         }
     }
 

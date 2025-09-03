@@ -1,7 +1,6 @@
 package com.femcoders.fixly.workorder.services.implementations;
 
 import com.femcoders.fixly.shared.exception.EntityNotFoundException;
-import com.femcoders.fixly.shared.exception.InsufficientPermissionsException;
 import com.femcoders.fixly.user.UserRepository;
 import com.femcoders.fixly.user.entities.User;
 import com.femcoders.fixly.user.services.UserAuthService;
@@ -103,7 +102,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
         WorkOrder workOrder = workOrderRepository.findByIdentifier(identifier)
                 .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier));
 
-        validateAccessPermissions(workOrder, currentUser, role);
+        workOrderValidationService.validateAccessPermissions(workOrder, currentUser, role);
 
         boolean hasChanges = false;
 
@@ -128,28 +127,6 @@ public class WorkOrderServiceImpl implements WorkOrderService {
         }
 
         return workOrderMapper.createWorkOrderResponseByRole(workOrder, auth);
-    }
-
-    private void validateAccessPermissions(WorkOrder workOrder, User currentUser, String role) {
-        switch (role) {
-            case ROLE_ADMIN -> {}
-            case ROLE_SUPERVISOR -> {
-                if (!workOrder.getSupervisedBy().equals(currentUser)) {
-                    throw new InsufficientPermissionsException("update", "work order not supervised by you");
-                }
-            }
-            case "ROLE_TECHNICIAN" -> {
-                if (workOrder.getAssignedTo() == null || !workOrder.getAssignedTo().contains(currentUser)) {
-                    throw new InsufficientPermissionsException("update", "work order not assigned to you");
-                }
-            }
-            case "ROLE_CLIENT" -> {
-                if (!workOrder.getCreatedBy().equals(currentUser)) {
-                    throw new InsufficientPermissionsException("update", "work order not created by you");
-                }
-            }
-            default -> throw new IllegalArgumentException("Unknown role: " + role);
-        }
     }
 
     private boolean updatePriority(WorkOrder workOrder, Priority newPriority, String role) {
@@ -183,6 +160,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
         return true;
     }
 
+    @Transactional
     private boolean updateTechnicians(WorkOrder workOrder, List<Long> technicianIds, String role) {
         if (technicianIds == null || technicianIds.isEmpty()) {
             return false;
@@ -219,5 +197,13 @@ public class WorkOrderServiceImpl implements WorkOrderService {
 
         workOrder.setSupervisedBy(supervisor);
         return true;
+    }
+
+    @Transactional
+    public void deleteWorkOrder(Long id){
+        if (!workOrderRepository.existsById(id)) {
+            throw new EntityNotFoundException(WorkOrder.class.getSimpleName(), "id", id.toString());
+        }
+        workOrderRepository.deleteById(id);
     }
 }

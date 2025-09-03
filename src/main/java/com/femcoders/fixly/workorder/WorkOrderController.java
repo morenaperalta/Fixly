@@ -71,4 +71,19 @@ public class WorkOrderController {
         WorkOrderResponse response = workOrderService.updateWorkOrder(identifier, request, auth);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @Operation(summary = "Delete work order by ID", description = "Deletes the work order with the specified ID. Only ADMIN role can perform this action.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Work order deleted successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "404", description = "WorkOrder with id not found")
+    })
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteWorkOrder(@PathVariable Long id){
+        workOrderService.deleteWorkOrder(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

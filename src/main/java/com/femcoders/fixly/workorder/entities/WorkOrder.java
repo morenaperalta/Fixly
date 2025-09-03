@@ -76,6 +76,6 @@ public class WorkOrder {
     @OneToMany(mappedBy = "workorder",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    @OneToMany
+    @OneToMany(mappedBy = "workorder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attachment> attachments;
 }
