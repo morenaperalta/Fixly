@@ -1,6 +1,7 @@
 package com.femcoders.fixly.workorder;
 
 import com.femcoders.fixly.workorder.dtos.request.CreateWorkOrderRequest;
+import com.femcoders.fixly.workorder.dtos.request.UpdateWorkOrderRequest;
 import com.femcoders.fixly.workorder.dtos.response.WorkOrderResponse;
 import com.femcoders.fixly.workorder.dtos.response.WorkOrderSummaryResponse;
 import com.femcoders.fixly.workorder.services.implementations.WorkOrderServiceImpl;
@@ -51,5 +52,23 @@ public class WorkOrderController {
     public ResponseEntity<WorkOrderResponse> getWorkOrderByIdentifier(@PathVariable String identifier, Authentication auth) {
         WorkOrderResponse workOrderResponse = workOrderService.getWorkOrderByIdentifier(identifier, auth);
         return new ResponseEntity<>(workOrderResponse, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Update work order by identifier", description = "Updates the work order with the specified identifier if it is accessible to the authenticated user. Permissions and fields that can be updated depend on user role.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Work order updated successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid request data"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "404", description = "WorkOrder with identifier not found")
+    })
+    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN', 'SUPERVISOR')")
+    @PutMapping("/{identifier}")
+    public ResponseEntity<WorkOrderResponse> updateWorkOrder(
+            @PathVariable String identifier,
+            @Valid @RequestBody UpdateWorkOrderRequest request,
+            Authentication auth) {
+        WorkOrderResponse response = workOrderService.updateWorkOrder(identifier, request, auth);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -53,9 +53,8 @@ public class WorkOrderValidationServiceImpl implements WorkOrderValidationServic
             case ASSIGNED -> validateAdminOrSupervisorPermission(role, "assign");
             case CLOSED -> validateAdminOrSupervisorPermission(role, "close");
             case IN_PROGRESS, READY_FOR_REVIEW -> validateTechnicianPermission(role);
-            default -> {
-                throw new InsufficientPermissionsException("update", "work order");
-            }
+            default -> throw new InsufficientPermissionsException("update", "work order");
+
         }
     }
 
