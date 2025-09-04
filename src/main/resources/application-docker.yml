@@ -1,0 +1,78 @@
+spring:
+  application:
+    name: fixly
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://fixly-db:3306/fixly?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&createDatabaseIfNotExist=true}
+    username: ${SPRING_DATASOURCE_USERNAME:fixly}
+    password: ${SPRING_DATASOURCE_PASSWORD:fixly123}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:com.mysql.cj.jdbc.Driver}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 300000
+      max-lifetime: 600000
+      connection-timeout: 20000
+
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: ${SPRING_JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        dialect: ${SPRING_JPA_HIBERNATE_DIALECT:org.hibernate.dialect.MySQL8Dialect}
+        format_sql: true
+    database-platform: ${SPRING_JPA_DATABASE_PLATFORM:org.hibernate.dialect.MySQL8Dialect}
+
+  # Jackson configuration
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: UTC
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# JWT Configuration
+jwt:
+  secret-key: ${JWT_SECRET_KEY:Prod_Fixly_2025_Super_Secret_Key_With_Special_Chars_!@}
+  expiration: ${JWT_EXPIRATION:1800000}
+
+# Cloudinary Configuration
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME:dzemlz1jb}
+  api-key: ${CLOUDINARY_API_KEY:697511796148143}
+  api-secret: ${CLOUDINARY_API_SECRET:2GXtOlARXsy-rSOVV2TkqMYTT3Q}
+
+# Logging Configuration
+logging:
+  level:
+    com.femcoders.fixly: ${LOGGING_LEVEL_COM_FEMCODERS_FIXLY:INFO}
+    org.hibernate.SQL: ${LOGGING_LEVEL_ORG_HIBERNATE_SQL:DEBUG}
+    org.hibernate.type.descriptor.sql.BasicBinder: DEBUG
+    org.springframework.security: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# Management endpoints (Actuator)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      show-components: always
+  health:
+    db:
+      enabled: true
