@@ -160,7 +160,6 @@ public class WorkOrderServiceImpl implements WorkOrderService {
         return true;
     }
 
-    @Transactional
     private boolean updateTechnicians(WorkOrder workOrder, List<Long> technicianIds, String role) {
         if (technicianIds == null || technicianIds.isEmpty()) {
             return false;

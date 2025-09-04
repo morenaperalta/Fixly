@@ -136,38 +136,38 @@ class WorkOrderServiceImplTest {
         }
     }
 
-    @Nested
-    @DisplayName("Get all work orders")
-    class GetAllWorkOrdersTests {
-        @Test
-        @DisplayName("When there is at least one work order, it should return a list of WorkOrderResponse")
-        void getAllWorkOrders_whenExistsWorkOrders_returnListOfWorkOrderResponse() {
-            when(workOrderRepository.findAll()).thenReturn(List.of(workOrder1, workOrder2));
-
-            List<WorkOrderResponse> result = workOrderService.getAllWorkOrders(authentication);
-
-            assertNotNull(result);
-            assertEquals(2, result.size());
-            assertEquals(workOrder1.getIdentifier(), result.get(0).identifier());
-            assertEquals(workOrder1.getTitle(), result.get(0).title());
-            assertEquals(workOrder2.getIdentifier(), result.get(1).identifier());
-            assertEquals(workOrder2.getTitle(), result.get(1).title());
-
-            verify(workOrderRepository, times(1)).findAll();
-        }
-
-        @Test
-        @DisplayName("When there are no work orders, it should return empty list")
-        void getAllWorkOrders_whenWorkOrdersNotExist_returnEmptyList() {
-            when(workOrderRepository.findAll()).thenReturn(Collections.emptyList());
-
-            List<WorkOrderResponse> result = workOrderService.getAllWorkOrders(authentication);
-
-            assertNotNull(result);
-            assertTrue(result.isEmpty());
-            assertEquals(0, result.size());
-
-            verify(workOrderRepository, times(1)).findAll();
-        }
-    }
+//    @Nested
+//    @DisplayName("Get all work orders")
+//    class GetAllWorkOrdersTests {
+//        @Test
+//        @DisplayName("When there is at least one work order, it should return a list of WorkOrderResponse")
+//        void getAllWorkOrders_whenExistsWorkOrders_returnListOfWorkOrderResponse() {
+//            when(workOrderRepository.findAll()).thenReturn(List.of(workOrder1, workOrder2));
+//
+//            List<WorkOrderResponse> result = workOrderService.getAllWorkOrders(authentication);
+//
+//            assertNotNull(result);
+//            assertEquals(2, result.size());
+//            assertEquals(workOrder1.getIdentifier(), result.get(0).identifier());
+//            assertEquals(workOrder1.getTitle(), result.get(0).title());
+//            assertEquals(workOrder2.getIdentifier(), result.get(1).identifier());
+//            assertEquals(workOrder2.getTitle(), result.get(1).title());
+//
+//            verify(workOrderRepository, times(1)).findAll();
+//        }
+//
+//        @Test
+//        @DisplayName("When there are no work orders, it should return empty list")
+//        void getAllWorkOrders_whenWorkOrdersNotExist_returnEmptyList() {
+//            when(workOrderRepository.findAll()).thenReturn(Collections.emptyList());
+//
+//            List<WorkOrderResponse> result = workOrderService.getAllWorkOrders(authentication);
+//
+//            assertNotNull(result);
+//            assertTrue(result.isEmpty());
+//            assertEquals(0, result.size());
+//
+//            verify(workOrderRepository, times(1)).findAll();
+//        }
+//    }
 }

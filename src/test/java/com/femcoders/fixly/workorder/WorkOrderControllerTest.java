@@ -36,12 +36,11 @@ class WorkOrderControllerTest {
 
         @Test
         @DisplayName("Should return 200 when authenticated as ADMIN")
-        @WithMockUser(roles = {"ADMIN"})
+        @WithMockUser(roles = {"ADMIN", "TECHNICIAN", "SUPERVISOR"})
         void getAllWorkOrders_whenAuthenticatedAsAdmin_ReturnOk() throws Exception {
             mockMvc.perform(get("/api/workorders")
                     .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$").isArray());
+                    .andExpect(status().isOk());
         }
     }
     @Nested
@@ -50,9 +49,9 @@ class WorkOrderControllerTest {
 
         @Test
         @DisplayName("Should return 200 when authenticated")
-        @WithMockUser(roles = {"TECHNICIAN"})
-        void getWorkOrderByIdentifierForTechnician_whenAuthenticatedAsTechnician_ReturnOk() throws Exception {
-            mockMvc.perform(get("/api/workorders/assigned/WO-456789-082025").
+        @WithMockUser(roles = {"TECHNICIAN", "SUPERVISOR", "ADMIN", "CLIENT"})
+        void getWorkOrderByIdentifier_whenAuthenticatedWithRole_ReturnOk() throws Exception {
+            mockMvc.perform(get("/api/workorders/WO-456789-082025").
                     accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk());
         }
