@@ -48,11 +48,11 @@ public class WorkOrderServiceImpl implements WorkOrderService {
         User user = userAuthService.getAuthenticatedUser();
         workOrder.setCreatedBy(user);
 
-        if (workOrder.getStatus() == null) {
-            workOrder.setStatus(Status.PENDING);
-        }
         if (workOrder.getPriority() == null) {
             workOrder.setPriority(Priority.PENDING);
+        }
+        if (workOrder.getStatus() == null) {
+            workOrder.setStatus(Status.PENDING);
         }
         if (workOrder.getSupervisionStatus() == null) {
             workOrder.setSupervisionStatus(SupervisionStatus.PENDING);
@@ -101,27 +101,37 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     public WorkOrderResponse updateWorkOrder(String identifier, UpdateWorkOrderRequest request, Authentication auth) {
         String role = userAuthService.extractRole(auth);
         User currentUser = userAuthService.getAuthenticatedUser();
-        WorkOrder workOrder = workOrderRepository.findByIdentifier(identifier)
-                .orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier));
+
+        WorkOrder workOrder = workOrderRepository.findByIdentifier(identifier).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier));
 
         workOrderValidationService.validateAccessPermissions(workOrder, currentUser, role);
 
-        boolean hasChanges = false;
-
-        if (request instanceof UpdateWorkOrderRequestForAdmin adminReq) {
-            hasChanges |= updatePriority(workOrder, adminReq.priority(), role);
-            hasChanges |= updateStatus(workOrder, adminReq.status(), role, currentUser, workOrder);
-            hasChanges |= updateSupervisionStatus(workOrder, adminReq.supervisionStatus(), role);
-            hasChanges |= updateTechnicians(workOrder, adminReq.technicianIds(), role);
-            hasChanges |= updateSupervisor(workOrder, adminReq.supervisorId(), role);
-        } else if (request instanceof UpdateWorkOrderRequestForSupervisor supervisorReq) {
-            hasChanges |= updatePriority(workOrder, supervisorReq.priority(), role);
-            hasChanges |= updateStatus(workOrder, supervisorReq.status(), role, currentUser, workOrder);
-            hasChanges |= updateSupervisionStatus(workOrder, supervisorReq.supervisionStatus(), role);
-            hasChanges |= updateTechnicians(workOrder, supervisorReq.technicianIds(), role);
-        } else if (request instanceof UpdateWorkOrderRequestForTechnician technicianReq) {
-            hasChanges |= updateStatus(workOrder, technicianReq.status(), role, currentUser, workOrder);
-        }
+        boolean hasChanges = switch (request) {
+            case UpdateWorkOrderRequestForAdmin(
+                    Priority priority, Status status, SupervisionStatus supervisionStatus, List<Long> technicianIds,
+                    Long supervisorId
+            ) -> {
+                boolean changes = false;
+                changes |= updatePriority(workOrder, priority, role);
+                changes |= updateStatus(workOrder, status, role, currentUser, workOrder);
+                changes |= updateSupervisionStatus(workOrder, supervisionStatus, role);
+                changes |= updateTechnicians(workOrder, technicianIds, role);
+                changes |= updateSupervisor(workOrder, supervisorId, role);
+                yield changes;
+            }
+            case UpdateWorkOrderRequestForSupervisor(
+                    Priority priority, Status status, SupervisionStatus supervisionStatus, List<Long> technicianIds
+            ) -> {
+                boolean changes = false;
+                changes |= updatePriority(workOrder, priority, role);
+                changes |= updateStatus(workOrder, status, role, currentUser, workOrder);
+                changes |= updateSupervisionStatus(workOrder, supervisionStatus, role);
+                changes |= updateTechnicians(workOrder, technicianIds, role);
+                yield changes;
+            }
+            case UpdateWorkOrderRequestForTechnician(var status) ->
+                    updateStatus(workOrder, status, role, currentUser, workOrder);
+        };
 
         if (hasChanges) {
             WorkOrder updatedWorkOrder = workOrderRepository.save(workOrder);

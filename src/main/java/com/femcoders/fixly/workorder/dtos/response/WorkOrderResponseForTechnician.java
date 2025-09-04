@@ -16,8 +16,8 @@ public record WorkOrderResponseForTechnician(
         String title,
         String description,
         String location,
-        Status status,
         Priority priority,
+        Status status,
         SupervisionStatus supervisionStatus,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime createdAt,

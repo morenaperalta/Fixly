@@ -44,10 +44,10 @@ public class WorkOrder {
     private String location;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Priority priority;
 
     @Enumerated(EnumType.STRING)
-    private Priority priority;
+    private Status status;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "supervision_status")

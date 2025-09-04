@@ -26,11 +26,11 @@ public final class WorkOrderMapper {
     }
 
     public WorkOrderResponseForAdmin createAdminResponse(WorkOrder workOrder) {
-        return new WorkOrderResponseForAdmin(workOrder.getId(), workOrder.getIdentifier(), workOrder.getTitle(), workOrder.getDescription(), workOrder.getLocation(), workOrder.getStatus(), workOrder.getPriority(), workOrder.getSupervisionStatus(), workOrder.getCreatedAt(), workOrder.getUpdatedAt(), mapperService.mapCreatedBy(workOrder), mapperService.mapSupervisedBy(workOrder),mapperService.mapAssignedTo(workOrder), mapperService.mapComment(workOrder), mapperService.mapAttachment(workOrder));
+        return new WorkOrderResponseForAdmin(workOrder.getId(), workOrder.getIdentifier(), workOrder.getTitle(), workOrder.getDescription(), workOrder.getLocation(), workOrder.getPriority(),workOrder.getStatus(), workOrder.getSupervisionStatus(), workOrder.getCreatedAt(), workOrder.getUpdatedAt(), mapperService.mapCreatedBy(workOrder), mapperService.mapSupervisedBy(workOrder),mapperService.mapAssignedTo(workOrder), mapperService.mapComment(workOrder), mapperService.mapAttachment(workOrder));
     }
 
     public WorkOrderResponseForTechnician createWorkOrderResponseForTechnician(WorkOrder workOrder) {
-        return new WorkOrderResponseForTechnician(workOrder.getIdentifier(), workOrder.getTitle(), workOrder.getDescription(), workOrder.getLocation(), workOrder.getStatus(), workOrder.getPriority(), workOrder.getSupervisionStatus(), workOrder.getCreatedAt(), workOrder.getUpdatedAt(), mapperService.mapCreatedBy(workOrder), mapperService.mapAssignedTo(workOrder), mapperService.mapComment(workOrder), mapperService.mapAttachment(workOrder));
+        return new WorkOrderResponseForTechnician(workOrder.getIdentifier(), workOrder.getTitle(), workOrder.getDescription(), workOrder.getLocation(), workOrder.getPriority(),workOrder.getStatus(), workOrder.getSupervisionStatus(), workOrder.getCreatedAt(), workOrder.getUpdatedAt(), mapperService.mapCreatedBy(workOrder), mapperService.mapAssignedTo(workOrder), mapperService.mapComment(workOrder), mapperService.mapAttachment(workOrder));
     }
 
     public WorkOrderResponseForClient createWorkOrderResponseForClient(WorkOrder workOrder) {
