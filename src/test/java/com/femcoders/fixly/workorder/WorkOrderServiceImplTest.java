@@ -2,11 +2,12 @@ package com.femcoders.fixly.workorder;
 
 import com.femcoders.fixly.user.entities.Role;
 import com.femcoders.fixly.user.entities.User;
+import com.femcoders.fixly.user.services.UserAuthService;
 import com.femcoders.fixly.user.services.UserServiceImpl;
+import com.femcoders.fixly.workorder.dtos.WorkOrderMapper;
 import com.femcoders.fixly.workorder.dtos.request.CreateWorkOrderRequest;
+import com.femcoders.fixly.workorder.dtos.response.WorkOrderResponse;
 import com.femcoders.fixly.workorder.dtos.response.WorkOrderSummaryResponse;
-import com.femcoders.fixly.workorder.dtos.response.WorkOrderResponseForAdmin;
-import com.femcoders.fixly.workorder.dtos.response.WorkOrderResponseForTechnician;
 import com.femcoders.fixly.workorder.entities.Status;
 import com.femcoders.fixly.workorder.entities.SupervisionStatus;
 import com.femcoders.fixly.workorder.entities.WorkOrder;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -35,7 +37,13 @@ import static org.mockito.Mockito.*;
 class WorkOrderServiceImplTest {
 
     @Mock
+    private Authentication authentication;
+
+    @Mock
     private WorkOrderRepository workOrderRepository;
+
+    @Mock
+    private UserAuthService userAuthService;
 
     @Mock
     private UserServiceImpl userService;
@@ -45,6 +53,9 @@ class WorkOrderServiceImplTest {
 
     @Mock
     private WorkOrderMapperServiceImpl mapperService;
+
+    @Mock
+    private WorkOrderMapper workOrderMapper;
 
     @InjectMocks
     private WorkOrderServiceImpl workOrderService;
@@ -80,7 +91,7 @@ class WorkOrderServiceImplTest {
         @Test
         @DisplayName("When request is valid, it should create work order successfully")
         void createWorkOrder_whenValidRequest_returnWorkOrderResponse() {
-            when(userService.getAuthenticatedUser()).thenReturn(authenticatedUser);
+            when(userAuthService.getAuthenticatedUser()).thenReturn(authenticatedUser);
             when(workOrderRepository.save(any(WorkOrder.class))).thenReturn(workOrder1);
 
             WorkOrderSummaryResponse result = workOrderService.createWorkOrder(createWorkOrderRequest);
@@ -92,14 +103,14 @@ class WorkOrderServiceImplTest {
             assertEquals(workOrder1.getLocation(), result.location());
             assertEquals(workOrder1.getCreatedAt(), result.createdAt());
 
-            verify(userService, times(1)).getAuthenticatedUser();
+            verify(userAuthService, times(1)).getAuthenticatedUser();
             verify(workOrderRepository, times(1)).save(any(WorkOrder.class));
         }
 
         @Test
         @DisplayName("When creating work order, it should set default status and supervision status")
         void createWorkOrder_whenCreated_shouldSetDefaultStatuses() {
-            when(userService.getAuthenticatedUser()).thenReturn(authenticatedUser);
+            when(userAuthService.getAuthenticatedUser()).thenReturn(authenticatedUser);
 
             String generatedIdentifier = "WO-123456";
             when(identifierService.generateIdentifier()).thenReturn(generatedIdentifier);
@@ -119,7 +130,7 @@ class WorkOrderServiceImplTest {
             WorkOrderSummaryResponse result = workOrderService.createWorkOrder(createWorkOrderRequest);
 
             assertNotNull(result);
-            verify(userService, times(1)).getAuthenticatedUser();
+            verify(userAuthService, times(1)).getAuthenticatedUser();
             verify(identifierService, times(1)).generateIdentifier();
             verify(workOrderRepository, times(1)).save(any(WorkOrder.class));
         }
@@ -133,7 +144,7 @@ class WorkOrderServiceImplTest {
         void getAllWorkOrders_whenExistsWorkOrders_returnListOfWorkOrderResponse() {
             when(workOrderRepository.findAll()).thenReturn(List.of(workOrder1, workOrder2));
 
-            List<WorkOrderResponseForAdmin> result = workOrderService.getAllWorkOrders();
+            List<WorkOrderResponse> result = workOrderService.getAllWorkOrders(authentication);
 
             assertNotNull(result);
             assertEquals(2, result.size());
@@ -150,106 +161,13 @@ class WorkOrderServiceImplTest {
         void getAllWorkOrders_whenWorkOrdersNotExist_returnEmptyList() {
             when(workOrderRepository.findAll()).thenReturn(Collections.emptyList());
 
-            List<WorkOrderResponseForAdmin> result = workOrderService.getAllWorkOrders();
+            List<WorkOrderResponse> result = workOrderService.getAllWorkOrders(authentication);
 
             assertNotNull(result);
             assertTrue(result.isEmpty());
             assertEquals(0, result.size());
 
             verify(workOrderRepository, times(1)).findAll();
-        }
-    }
-
-
-    @Nested
-    @DisplayName("Get work orders assigned")
-    class GetWorkOrdersAssignedTests {
-        @Test
-        @DisplayName("When technician has assigned work orders, it should return list of assigned work orders")
-        void getWorkOrdersAssigned_whenTechnicianHasAssignedWorkOrders_returnListOfWorkOrderResponse() {
-            when(userService.getAuthenticatedUser()).thenReturn(technician);
-            when(workOrderRepository.findByAssignedToContaining(technician)).thenReturn(List.of(workOrder2));
-
-            List<WorkOrderResponseForTechnician> result = workOrderService.getWorkOrdersAssigned();
-
-            assertNotNull(result);
-            assertEquals(1, result.size());
-            assertEquals(workOrder2.getIdentifier(), result.get(0).identifier());
-            assertEquals(workOrder2.getTitle(), result.get(0).title());
-
-            verify(userService, times(1)).getAuthenticatedUser();
-            verify(workOrderRepository, times(1)).findByAssignedToContaining(technician);
-        }
-
-        @Test
-        @DisplayName("When technician has no assigned work orders, it should return empty list")
-        void getWorkOrdersAssigned_whenTechnicianHasNoAssignedWorkOrders_returnEmptyList() {
-            when(userService.getAuthenticatedUser()).thenReturn(technician2);
-            when(workOrderRepository.findByAssignedToContaining(technician2)).thenReturn(Collections.emptyList());
-
-            List<WorkOrderResponseForTechnician> result = workOrderService.getWorkOrdersAssigned();
-
-            assertNotNull(result);
-            assertTrue(result.isEmpty());
-            assertEquals(0, result.size());
-
-            verify(userService, times(1)).getAuthenticatedUser();
-            verify(workOrderRepository, times(1)).findByAssignedToContaining(technician2);
-        }
-
-        @Test
-        @DisplayName("When no work orders exist, it should return empty list")
-        void getWorkOrdersAssigned_whenNoWorkOrdersExist_returnEmptyList() {
-            when(userService.getAuthenticatedUser()).thenReturn(technician);
-            when(workOrderRepository.findByAssignedToContaining(technician)).thenReturn(Collections.emptyList());
-
-            List<WorkOrderResponseForTechnician> result = workOrderService.getWorkOrdersAssigned();
-
-            assertNotNull(result);
-            assertTrue(result.isEmpty());
-            assertEquals(0, result.size());
-
-            verify(userService, times(1)).getAuthenticatedUser();
-            verify(workOrderRepository, times(1)).findByAssignedToContaining(technician);
-        }
-    }
-
-    @Nested
-    @DisplayName("Get work orders supervised")
-    class GetWorkOrdersSupervisedTests {
-        @Test
-        @DisplayName("When supervisor has assigned work orders to supervise, it should return list of that work orders")
-        void getWorkOrdersSupervised_whenSupervisorHasSupervisedWorkOrders_returnListOfWorkOrderResponse() {
-            workOrder2.setSupervisedBy(supervisor);
-
-            when(userService.getAuthenticatedUser()).thenReturn(supervisor);
-            when(workOrderRepository.findBySupervisedBy(supervisor)).thenReturn(List.of(workOrder2));
-
-            List<WorkOrderResponseForAdmin> result = workOrderService.getWorkOrdersSupervised();
-
-            assertNotNull(result);
-            assertEquals(1, result.size());
-            assertEquals(workOrder2.getIdentifier(), result.get(0).identifier());
-            assertEquals(workOrder2.getTitle(), result.get(0).title());
-
-            verify(userService, times(1)).getAuthenticatedUser();
-            verify(workOrderRepository, times(1)).findBySupervisedBy(supervisor);
-        }
-
-        @Test
-        @DisplayName("When supervisor has no assigned work orders, it should return empty list")
-        void getWorkOrdersSupervised_whenSupervisorHasNoSupervisedWorkOrders_returnEmptyList() {
-            when(userService.getAuthenticatedUser()).thenReturn(supervisor);
-            when(workOrderRepository.findBySupervisedBy(supervisor)).thenReturn(Collections.emptyList());
-
-            List<WorkOrderResponseForAdmin> result = workOrderService.getWorkOrdersSupervised();
-
-            assertNotNull(result);
-            assertTrue(result.isEmpty());
-            assertEquals(0, result.size());
-
-            verify(userService, times(1)).getAuthenticatedUser();
-            verify(workOrderRepository, times(1)).findBySupervisedBy(supervisor);
         }
     }
 }

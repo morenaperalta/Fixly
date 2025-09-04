@@ -73,7 +73,6 @@ class AuthServiceTest {
             UserResponse response = authService.register(registrationRequest);
 
             assertNotNull(response);
-            assertEquals(UserResponse.class, response.getClass());
             assertEquals("User1", response.username());
             assertEquals("user1@email.com", response.email());
             assertEquals("FirstName", response.firstName());

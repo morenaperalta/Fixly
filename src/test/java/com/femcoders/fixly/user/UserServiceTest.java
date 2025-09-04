@@ -1,8 +1,8 @@
 package com.femcoders.fixly.user;
 
 import com.femcoders.fixly.shared.security.CustomUserDetails;
+import com.femcoders.fixly.user.dtos.UserMapper;
 import com.femcoders.fixly.user.dtos.response.UserResponse;
-import com.femcoders.fixly.user.dtos.response.UserResponseForAdmin;
 import com.femcoders.fixly.user.entities.Role;
 import com.femcoders.fixly.user.entities.User;
 import com.femcoders.fixly.user.services.UserServiceImpl;
@@ -34,6 +34,15 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private Authentication authentication;
+
+    @Mock
+    private SecurityContext securityContext;
+
+    @Mock
+    private UserMapper userMapper;
+
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -52,18 +61,16 @@ class UserServiceTest {
     @DisplayName("Get all users")
     class GetAllUsersTests {
         @Test
-        @DisplayName("When there is at least one user, it should return a list of UserResponseForAdmin")
-        void getAllUsers_whenExistsUsers_returnListOfUserResponseForAdmin() {
+        @DisplayName("When there is at least one user, it should return a list of UserResponse")
+        void getAllUsers_whenExistsUsers_returnListOfUserResponse() {
             when(userRepository.findAll()).thenReturn(List.of(user1, user2));
 
-            List<UserResponseForAdmin> result = userService.getAllUsers();
+            List<UserResponse> result = userService.getAllUsers(authentication);
 
             assertNotNull(result);
             assertEquals(2, result.size());
-            assertEquals(user1.getId(), result.get(0).id());
             assertEquals(user1.getUsername(), result.get(0).username());
             assertEquals(user1.getEmail(), result.get(0).email());
-            assertEquals(user2.getId(), result.get(1).id());
             assertEquals(user2.getUsername(), result.get(1).username());
             verify(userRepository, times(1)).findAll();
         }
@@ -73,7 +80,7 @@ class UserServiceTest {
         void getAllUsers_whenUsersNotExists_returnEmptyList() {
             when(userRepository.findAll()).thenReturn(Collections.emptyList());
 
-            List<UserResponseForAdmin> result = userService.getAllUsers();
+            List<UserResponse> result = userService.getAllUsers(authentication);
 
             assertNotNull(result);
             assertTrue(result.isEmpty());
@@ -89,8 +96,6 @@ class UserServiceTest {
         @DisplayName("When authenticated user exists, it should return UserResponse")
         void getOwnProfile_whenAuthenticatedUserExists_returnUserResponse() {
             CustomUserDetails userDetails = new CustomUserDetails(user1);
-            Authentication authentication = mock(Authentication.class);
-            SecurityContext securityContext = mock(SecurityContext.class);
 
             try (MockedStatic<SecurityContextHolder> mockedSecurityContextHolder = mockStatic(SecurityContextHolder.class)) {
                 when(SecurityContextHolder.getContext()).thenReturn(securityContext);
@@ -98,13 +103,13 @@ class UserServiceTest {
                 when(authentication.getPrincipal()).thenReturn(userDetails);
                 when(userRepository.findByUsername(user1.getUsername())).thenReturn(Optional.of(user1));
 
-                UserResponse result = userService.getOwnProfile();
+                UserResponse result = userService.getOwnProfile(authentication);
 
                 assertNotNull(result);
                 assertEquals(user1.getUsername(), result.username());
                 assertEquals(user1.getEmail(), result.email());
 
-                verify(userRepository, times(2)).findByUsername(user1.getUsername());
+                verify(userMapper, times(2)).createUserResponseByRole(user1,authentication);
             }
         }
     }
