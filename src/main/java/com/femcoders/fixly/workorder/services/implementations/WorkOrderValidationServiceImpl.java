@@ -13,8 +13,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class WorkOrderValidationServiceImpl implements WorkOrderValidationService {
-    private static final String ROLE_ADMIN = "ROLE_ADMIN";
     private static final String ROLE_SUPERVISOR = "ROLE_SUPERVISOR";
+    private static final String ROLE_TECHNICIAN = "ROLE_TECHNICIAN";
+    private static final String ROLE_CLIENT = "ROLE_CLIENT";
     private final UserAuthService userAuthService;
 
     @Override
@@ -45,25 +46,19 @@ public class WorkOrderValidationServiceImpl implements WorkOrderValidationServic
 
     public void validateAccessPermissions(WorkOrder workOrder, User currentUser, String role) {
         switch (role) {
-            case ROLE_ADMIN -> {}
-            case ROLE_SUPERVISOR -> {
-                if (!workOrder.getSupervisedBy().equals(currentUser)) {
+            case String s when s.equals(ROLE_SUPERVISOR) && !workOrder.getSupervisedBy().equals(currentUser) ->
                     throw new InsufficientPermissionsException("update", "work order not supervised by you");
-                }
-            }
-            case "ROLE_TECHNICIAN" -> {
-                if (workOrder.getAssignedTo() == null || !workOrder.getAssignedTo().contains(currentUser)) {
+
+            case String s when s.equals(ROLE_TECHNICIAN) && (workOrder.getAssignedTo() == null || !workOrder.getAssignedTo().contains(currentUser)) ->
                     throw new InsufficientPermissionsException("update", "work order not assigned to you");
-                }
-            }
-            case "ROLE_CLIENT" -> {
-                if (!workOrder.getCreatedBy().equals(currentUser)) {
+
+            case String s when s.equals(ROLE_CLIENT) && !workOrder.getCreatedBy().equals(currentUser) ->
                     throw new InsufficientPermissionsException("update", "work order not created by you");
-                }
-            }
+
             default -> throw new IllegalArgumentException("Unknown role: " + role);
         }
     }
+
 
     @Override
     public void validateStatusTransition(Status currentStatus, Status newStatus, String role, WorkOrder workOrder, User user) {
@@ -133,8 +128,7 @@ public class WorkOrderValidationServiceImpl implements WorkOrderValidationServic
     }
 
     private void validateUserAssignment(Status newStatus, WorkOrder workOrder, User user) {
-        if (requiresAssignment(newStatus) &&
-                (workOrder.getAssignedTo() == null || !workOrder.getAssignedTo().contains(user))) {
+        if (requiresAssignment(newStatus) && (workOrder.getAssignedTo() == null || !workOrder.getAssignedTo().contains(user))) {
             throw new IllegalArgumentException("You're not assigned to this work order");
         }
     }

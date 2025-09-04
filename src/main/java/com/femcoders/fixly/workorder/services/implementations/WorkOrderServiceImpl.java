@@ -30,6 +30,8 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     private static final String IDENTIFIER_FIELD = "identifier";
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
     private static final String ROLE_SUPERVISOR = "ROLE_SUPERVISOR";
+    private static final String ROLE_TECHNICIAN = "ROLE_TECHNICIAN";
+    private static final String ROLE_CLIENT = "ROLE_CLIENT";
     private final WorkOrderRepository workOrderRepository;
     private final UserRepository userRepository;
     private final WorkOrderIdentifierService identifierService;
@@ -66,10 +68,10 @@ public class WorkOrderServiceImpl implements WorkOrderService {
         User user = userAuthService.getAuthenticatedUser();
         List<WorkOrder> workOrders;
         switch (role) {
-            case "ROLE_ADMIN" -> workOrders = workOrderRepository.findAll();
-            case "ROLE_SUPERVISOR" -> workOrders = workOrderRepository.findBySupervisedBy(user);
-            case "ROLE_TECHNICIAN" -> workOrders = workOrderRepository.findByAssignedToContaining(user);
-            case "ROLE_CLIENT" -> workOrders = workOrderRepository.findByCreatedBy(user);
+            case ROLE_ADMIN -> workOrders = workOrderRepository.findAll();
+            case ROLE_SUPERVISOR -> workOrders = workOrderRepository.findBySupervisedBy(user);
+            case ROLE_TECHNICIAN -> workOrders = workOrderRepository.findByAssignedToContaining(user);
+            case ROLE_CLIENT -> workOrders = workOrderRepository.findByCreatedBy(user);
             default -> throw new IllegalArgumentException("Unknown role: " + role);
         }
         return workOrderMapper.createResponseList(workOrders, auth);
@@ -81,13 +83,13 @@ public class WorkOrderServiceImpl implements WorkOrderService {
         User user = userAuthService.getAuthenticatedUser();
         WorkOrder workOrder;
         switch (role) {
-            case "ROLE_ADMIN" ->
+            case ROLE_ADMIN ->
                     workOrder = workOrderRepository.findByIdentifier(identifier).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, identifier));
-            case "ROLE_SUPERVISOR" ->
+            case ROLE_SUPERVISOR ->
                     workOrder = workOrderRepository.findByIdentifierAndSupervisedBy(identifier, user).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), ID_FIELD, identifier, "supervised"));
-            case "ROLE_TECHNICIAN" ->
+            case ROLE_TECHNICIAN ->
                     workOrder = workOrderRepository.findByIdentifierAndAssignedToContaining(identifier, user).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier, "assigned"));
-            case "ROLE_CLIENT" ->
+            case ROLE_CLIENT ->
                     workOrder = workOrderRepository.findByIdentifierAndCreatedBy(identifier, user).orElseThrow(() -> new EntityNotFoundException(WorkOrder.class.getSimpleName(), IDENTIFIER_FIELD, identifier, "created"));
             default -> throw new IllegalArgumentException("Unknown role: " + role);
         }
