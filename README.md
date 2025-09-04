@@ -45,15 +45,16 @@ This gap generates inefficiencies, errors, and hinders decision-making. **Fixly 
 
 ## ✨ Features
 
-- 👥 **Multi-Role User Management**: CLIENT, TECHNICIAN, SUPERVISOR roles with specific permissions
+- 👥 **Multi-Role User Management**: CLIENT, TECHNICIAN, SUPERVISOR, ADMIN roles with specific permissions
 - 🔐 **Secure Authentication**: JWT-based authentication with BCrypt password encryption
 - 📋 **Work Order Lifecycle**: Complete CRUD operations with state management
 - 📊 **Status Tracking**: PENDING → ASSIGNED → IN_PROGRESS → READY_FOR_REVIEW → CLOSED
-- 💬 **Comment System**: Internal and client notes with file attachments
-- 📎 **File Management**: Cloudinary integration for document and image storage
 - 🛡️ **Security**: Role-based access control and route protection
 - 🚨 **Error Handling**: Comprehensive exception handling with custom responses
+
 ### Future implementations
+- 💬 **Comment System**: Internal and client notes with file attachments
+- 📎 **File Management**: Cloudinary integration for document and image storage
 - 🔍 **Advanced Filtering**: Search and pagination capabilities
 - 📧 **Notifications**: Automatic email notifications
 - 📈 **Reporting**: Metrics and productivity tracking
@@ -66,7 +67,7 @@ This gap generates inefficiencies, errors, and hinders decision-making. **Fixly 
 
 Before you begin, ensure you have the following installed:
 
-- **Java 11+** - [Download here](https://www.oracle.com/java/technologies/downloads/)
+- **Java 21+** - [Download here](https://www.oracle.com/java/technologies/downloads/)
 - **Maven 3.6+** - [Download here](https://maven.apache.org/download.cgi)
 - **MySQL 8.0+** - [Download here](https://dev.mysql.com/downloads/)
 - **Docker** (optional) - [Download here](https://www.docker.com/products/docker-desktop)
@@ -181,7 +182,7 @@ Authorization: Bearer <your_jwt_token>
 ### Swagger Documentation
 Access interactive API documentation at:
 ```
-http://localhost:8080/swagger-ui.html
+http://localhost:8000/swagger-ui/index.html
 ```
 
 ---
@@ -194,17 +195,13 @@ http://localhost:8080/swagger-ui.html
 
 ### 📋 Work Orders
 
-### 💬 Comments
-
-### 📎 File Attachments
-
 ---
 
 ## 🔧 Technologies
 
 ### Backend Stack
-- **Java 11+** - Core programming language
-- **Spring Boot 2.7+** - Application framework
+- **Java 21** - Core programming language
+- **Spring Boot 3.5.4** - Application framework
 - **Spring Security** - Authentication and authorization
 - **Spring Data JPA** - Data persistence layer
 - **JWT** - Token-based authentication
@@ -232,22 +229,19 @@ http://localhost:8080/swagger-ui.html
 
 ### Database Design
 The application uses the following main entities:
-- **User**: User accounts with roles (CLIENT, TECHNICIAN, SUPERVISOR)
+- **User**: User accounts with roles (CLIENT, TECHNICIAN, SUPERVISOR, ADMIN)
 - **WorkOrder**: Main work order entity with lifecycle states
+- - **WorkOrderAssignment**: Assignment tracking between supervisors and technicians
 - **Comment**: Comments associated with work orders
 - **Attachment**: File attachments for work orders and comments
-- **WorkOrderAssignment**: Assignment tracking between supervisors and technicians
-
 ---
 
 ## 🧪 Tests
 
-This project maintains a minimum **70% test coverage** as required. Tests include:
+Tests include:
 
 - **Unit Tests**: Service layer business logic
 - **Integration Tests**: Controller endpoints
-- **Security Tests**: Authentication and authorization
-- **Repository Tests**: Data access layer
 
 ### Running Tests
 ```bash
@@ -265,7 +259,7 @@ open target/site/jacoco/index.html
 
 ## 🔄 CI Pipeline
 
-The project uses **GitHub Actions** for continuous integration and deployment:
+The project uses **GitHub Actions** for continuous integration.
 
 ---
 
