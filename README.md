@@ -17,13 +17,14 @@ A comprehensive REST API for work order management designed to digitalize and tr
 - [✨ Features](#-features)
 - [🚀 Getting Started](#-getting-started)
 - [⚙️ Installation](#️-installation)
-- [🏃‍♂️ Running the Application](#️-running-the-application)
+- [🏃‍♂️ Running the Application](#-running-the-application)
+- [🐳 Docker Setup](#-docker-setup)
 - [📚 API Documentation](#-api-documentation)
 - [🌐 API Endpoints](#-api-endpoints)
 - [🔧 Technologies](#-technologies)
 - [📊 Architecture](#-architecture)
 - [🧪 Tests](#-tests)
-- [🔄 CI/CD Pipeline](#-cicd-pipeline)
+- [🔄 CI Pipeline](#-ci-pipeline)
 - [🤝 Contributing](#-contributing)
 
 ---
@@ -155,14 +156,29 @@ Sign up at [Cloudinary](https://cloudinary.com/) and get your credentials for fi
 ./mvnw spring-boot:run
 ```
 
-### Using Docker
+## 🐳 Docker Setup
+### Build Docker image locally
 ```bash
-# Build Docker image
 docker build -t fixly-api .
-
-# Run with Docker Compose
-docker-compose up -d
+docker-compose up --build -d
 ```
+The Spring Boot app exposes endpoints on port 8000. For example, to check the **health** endpoint:
+
+```bash
+curl http://localhost:8000/actuator/health
+```
+
+### Use pre-built image from Docker Hub*
+
+Pull the image with the latest tag:
+
+```bash
+docker pull peraltamorena/fixly-app:latest
+docker run -p 8000:8000 --name fixly-app peraltamorena/fixly-app:latest
+```
+
+The API will be available at: `http://localhost:8000/api/`
+<br>
 
 ---
 
@@ -170,7 +186,7 @@ docker-compose up -d
 
 ### Base URL
 ```
-http://localhost:8080/api/
+http://localhost:8000/api/
 ```
 
 ### Authentication
@@ -190,11 +206,25 @@ http://localhost:8000/swagger-ui/index.html
 ## 🌐 API Endpoints
 
 ### 🔐 Authentication
+| Method   | Endpoint              | Description                      | Auth | Role |
+|----------|----------------------|----------------------------------|------|------|
+| **POST** | `/api/auth/register`  | Register a new user              | ![No](https://img.shields.io/badge/Auth-No-red) | N/A |
+| **POST** | `/api/auth/login`     | Login with username and password | ![No](https://img.shields.io/badge/Auth-No-red) | N/A |
 
 ### 👥 User Management
+| Method     | Endpoint          | Description          | Auth                                         | Role                                                                                                            |
+|------------|-------------------|----------------------|----------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| **GET**    | `/api/users`      | List all users       | ![Si](https://img.shields.io/badge/Auth-Si-green) | ![Admin](https://img.shields.io/badge/Role-ADMIN-purple) ![Super](https://img.shields.io/badge/Role-SUPER-blue) |
+| **GET**    | `/api/users/me`   | Get own user profile | ![Si](https://img.shields.io/badge/Auth-Si-green) | ![Admin](https://img.shields.io/badge/Role-ADMIN-purple) ![Super](https://img.shields.io/badge/Role-SUPER-blue) ![Tech](https://img.shields.io/badge/Role-TECH-yellow) ![Client](https://img.shields.io/badge/Role-CLIENT-cyan)                                                              |
+
 
 ### 📋 Work Orders
-
+| Method  | Endpoint                       | Description                     | Auth | Role                                                                                                                                                                                                                           |
+|---------|--------------------------------|---------------------------------|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **GET** | `/api/workorders`              | List work orders by role        | ![Yes](https://img.shields.io/badge/Auth-Yes-green) | ![Admin](https://img.shields.io/badge/Role-ADMIN-purple) ![Super](https://img.shields.io/badge/Role-SUPER-blue) ![Tech](https://img.shields.io/badge/Role-TECH-yellow) ![Client](https://img.shields.io/badge/Role-CLIENT-cyan) |
+| **GET**   | `/api/workorders/{identifier}` | Get work order by identifier    | ![Yes](https://img.shields.io/badge/Auth-Yes-green) | ![Admin](https://img.shields.io/badge/Role-ADMIN-purple) ![Super](https://img.shields.io/badge/Role-SUPER-blue) ![Tech](https://img.shields.io/badge/Role-TECH-yellow) ![Client](https://img.shields.io/badge/Role-CLIENT-cyan) |
+| **PUT** | `/api/workorders/{identifier}` | Update work order by identifier | ![Yes](https://img.shields.io/badge/Auth-Yes-green) | ![Admin](https://img.shields.io/badge/Role-ADMIN-purple) ![Super](https://img.shields.io/badge/Role-SUPER-blue) ![Tech](https://img.shields.io/badge/Role-TECH-yellow)                                                         |
+| **DELETE** | `/api/workorders/{id}`   | Delete work order               | ![Yes](https://img.shields.io/badge/Auth-Yes-green) | ![Admin](https://img.shields.io/badge/Role-ADMIN-purple) ![Super](https://img.shields.io/badge/Role-SUPER-blue) |
 ---
 
 ## 🔧 Technologies
@@ -231,7 +261,7 @@ http://localhost:8000/swagger-ui/index.html
 The application uses the following main entities:
 - **User**: User accounts with roles (CLIENT, TECHNICIAN, SUPERVISOR, ADMIN)
 - **WorkOrder**: Main work order entity with lifecycle states
-- - **WorkOrderAssignment**: Assignment tracking between supervisors and technicians
+- **WorkOrderAssignment**: Assignment tracking between supervisors and technicians
 - **Comment**: Comments associated with work orders
 - **Attachment**: File attachments for work orders and comments
 ---
@@ -260,6 +290,11 @@ open target/site/jacoco/index.html
 ## 🔄 CI Pipeline
 
 The project uses **GitHub Actions** for continuous integration.
+
+
+[![CI Pipeline](https://github.com/morenaperalta/Fixly/actions/workflows/ci.yml/badge.svg)](https://github.com/morenaperalta/Fixly/actions/workflows/ci.yml)
+
+
 
 ---
 
