@@ -9,7 +9,7 @@ A comprehensive REST API for work order management designed to digitalize and tr
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
 
----
+
 
 ## 📋 Table of Contents
 
@@ -27,13 +27,14 @@ A comprehensive REST API for work order management designed to digitalize and tr
 - [🔄 CI Pipeline](#-ci-pipeline)
 - [🤝 Contributing](#-contributing)
 
----
+
 
 ## 🎯 Project Overview
 
 In today's business landscape, **work order management** is a critical challenge for organizations with extensive physical infrastructure, industrial equipment, and maintenance services. Many companies still rely on **obsolete and fragmented methods** that result in lost requests in emails, disorganized spreadsheets without version control or traceability, critical information that gets lost or misinterpreted through verbal communication, and the use of **inadequate generic systems** that don't adapt to real operational needs.
 
 This gap generates inefficiencies, errors, and hinders decision-making. **Fixly emerges as the comprehensive solution** to digitalize and transform these processes.
+
 
 ### 🎯 Specific Objectives
 
@@ -42,7 +43,7 @@ This gap generates inefficiencies, errors, and hinders decision-making. **Fixly 
 - **Guarantee Traceability**: Provide detailed tracking of work orders
 - **Optimize Resources**: Efficiently manage technicians and priorities
 
----
+
 
 ## ✨ Features
 
@@ -53,14 +54,7 @@ This gap generates inefficiencies, errors, and hinders decision-making. **Fixly 
 - 🛡️ **Security**: Role-based access control and route protection
 - 🚨 **Error Handling**: Comprehensive exception handling with custom responses
 
-### Future implementations
-- 💬 **Comment System**: Internal and client notes with file attachments
-- 📎 **File Management**: Cloudinary integration for document and image storage
-- 🔍 **Advanced Filtering**: Search and pagination capabilities
-- 📧 **Notifications**: Automatic email notifications
-- 📈 **Reporting**: Metrics and productivity tracking
 
----
 
 ## 🚀 Getting Started
 
@@ -90,7 +84,7 @@ cd fixly
 
 The API will be available at `http://localhost:8080`
 
----
+
 
 ## ⚙️ Installation
 
@@ -103,7 +97,7 @@ cd fixly
 ### 2. Configure Database
 Create a MySQL database and edit `src/main/resources/application.yml`:
 
-```yaml
+```yml
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/fixly_db
@@ -147,7 +141,6 @@ Sign up at [Cloudinary](https://cloudinary.com/) and get your credentials for fi
 ./mvnw clean install
 ```
 
----
 
 ## 🏃‍♂️ Running the Application
 
@@ -180,7 +173,6 @@ docker run -p 8000:8000 --name fixly-app peraltamorena/fixly-app:latest
 The API will be available at: `http://localhost:8000/api/`
 <br>
 
----
 
 ## 📚 API Documentation
 
@@ -201,7 +193,6 @@ Access interactive API documentation at:
 http://localhost:8000/swagger-ui/index.html
 ```
 
----
 
 ## 🌐 API Endpoints
 
@@ -225,7 +216,7 @@ http://localhost:8000/swagger-ui/index.html
 | **GET**   | `/api/workorders/{identifier}` | Get work order by identifier    | ![Yes](https://img.shields.io/badge/Auth-Yes-green) | ![Admin](https://img.shields.io/badge/Role-ADMIN-purple) ![Super](https://img.shields.io/badge/Role-SUPER-blue) ![Tech](https://img.shields.io/badge/Role-TECH-yellow) ![Client](https://img.shields.io/badge/Role-CLIENT-cyan) |
 | **PUT** | `/api/workorders/{identifier}` | Update work order by identifier | ![Yes](https://img.shields.io/badge/Auth-Yes-green) | ![Admin](https://img.shields.io/badge/Role-ADMIN-purple) ![Super](https://img.shields.io/badge/Role-SUPER-blue) ![Tech](https://img.shields.io/badge/Role-TECH-yellow)                                                         |
 | **DELETE** | `/api/workorders/{id}`   | Delete work order               | ![Yes](https://img.shields.io/badge/Auth-Yes-green) | ![Admin](https://img.shields.io/badge/Role-ADMIN-purple) ![Super](https://img.shields.io/badge/Role-SUPER-blue) |
----
+
 
 ## 🔧 Technologies
 
@@ -253,7 +244,6 @@ http://localhost:8000/swagger-ui/index.html
 - **JUnit 5** - Testing framework
 - **Mockito** - Mocking framework
 
----
 
 ## 📊 Architecture
 
@@ -264,7 +254,7 @@ The application uses the following main entities:
 - **WorkOrderAssignment**: Assignment tracking between supervisors and technicians
 - **Comment**: Comments associated with work orders
 - **Attachment**: File attachments for work orders and comments
----
+
 
 ## 🧪 Tests
 
@@ -285,18 +275,22 @@ Tests include:
 open target/site/jacoco/index.html
 ```
 
----
 
 ## 🔄 CI Pipeline
 
 The project uses **GitHub Actions** for continuous integration.
 
 
-[![CI Pipeline](https://github.com/morenaperalta/Fixly/actions/workflows/ci.yml/badge.svg)](https://github.com/morenaperalta/Fixly/actions/workflows/ci.yml)
+[![Build Pipeline](https://github.com/morenaperalta/Fixly/actions/workflows/build.yml/badge.svg)](https://github.com/morenaperalta/Fixly/actions/workflows/build.yml)
+[![Release Pipeline](https://github.com/morenaperalta/Fixly/actions/workflows/release.yml/badge.svg)](https://github.com/morenaperalta/Fixly/actions/workflows/release.yml)
 
 
-
----
+## ➡️ Future implementations
+- 💬 **Comment System**: Internal and client notes with file attachments
+- 📎 **File Management**: Cloudinary integration for document and image storage
+- 🔍 **Advanced Filtering**: Search and pagination capabilities
+- 📧 **Notifications**: Automatic email notifications
+- 📈 **Reporting**: Metrics and productivity tracking
 
 ## 🤝 Contributing
 
@@ -336,8 +330,6 @@ Contributions are welcome! Please follow these guidelines:
 - `refactor:` code refactoring
 - `test:` adding or updating tests
 - `chore:` maintenance tasks
-
----
 
 ## Author
 
