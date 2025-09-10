@@ -14,6 +14,9 @@ jobs:
     # Use the latest Ubuntu runner for consistent build environment
     runs-on: ubuntu-latest
 
+    # Define environment for this job
+    environment: production
+
     steps:
       # Step 1: Check out the repository code at the tagged commit
       - uses: actions/checkout@v4
@@ -43,7 +46,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: peraltamorena/fixly-app
+          images: ${{ secrets.DOCKER_USERNAME }}/fixly-app
+
           tags: |
             type=ref,event=tag      # Tag with version number (e.g., v1.0.0)
             type=raw,value=latest   # Also tag as 'latest' for easy access
@@ -61,27 +65,32 @@ jobs:
           cache-from: type=gha                         # Use GitHub Actions cache for layers
           cache-to: type=gha,mode=max                  # Save all layers to cache
 
-      # Step 7: Create GitHub Release (Currently disabled)
-      # Uncomment the section below to automatically create GitHub releases
-      # - name: Create GitHub Release Draft
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: ${{ github.ref_name }}           # Use the pushed tag name
-      #     release_name: Release ${{ github.ref_name }} # Release title
-      #     draft: true                                 # Create as draft for manual review
-      #     prerelease: false                          # Mark as stable release
-      #     body: |
-      #       ## Changes
-      #
-      #       Docker image: `peraltamorena/fixly-app:${{ github.ref_name }}`
-      #
-      #       ## Installation
-      #
-      #       ```bash
-      #       docker pull peraltamorena/fixly-app:${{ github.ref_name }}
-      #       ```
+
+      # Step 7: Create GitHub Release
+      # Automatically creates GitHub releases with build info
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          body: |
+            ## Fixly App Release ${{ github.ref_name }}
+            
+            Docker image: `${{ secrets.DOCKER_USERNAME }}/fixly-app:${{ github.ref_name }}`
+            
+            ### Installation
+            
+            ```bash
+            docker pull ${{ secrets.DOCKER_USERNAME }}/fixly-app:${{ github.ref_name }}
+            ```
+            
+            ### Environment Variables
+            
+            See documentation for required environment variables.
 
       # Step 8: Clean up Docker resources
       # Always runs to prevent resource leaks, even if previous steps fail
