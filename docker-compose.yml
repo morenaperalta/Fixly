@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # MySQL database service
   fixly-db:
     image: mysql:8.0
     container_name: fixly-db
@@ -20,12 +19,9 @@ services:
 
     volumes:
       - mysql_data:/var/lib/mysql
-      # Add initialization scripts if needed
-      # - ./sql-scripts:/docker-entrypoint-initdb.d
 
     restart: unless-stopped
 
-    # Improved health check
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot123"]
       interval: 10s
@@ -36,14 +32,12 @@ services:
     networks:
       - fixly-network
 
-    # Add command to improve MySQL performance for development
     command: >
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
       --lower_case_table_names=1
       --max_connections=200
 
-  # SpringBoot application service
   fixly-app:
     build:
       context: .
@@ -55,30 +49,24 @@ services:
       - "8000:8000"
 
     environment:
-      # Spring Boot configuration
       SPRING_PROFILES_ACTIVE: docker
       SERVER_PORT: 8000
 
-      # Database configuration
       SPRING_DATASOURCE_URL: jdbc:mysql://fixly-db:3306/fixly?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: fixly
       SPRING_DATASOURCE_PASSWORD: fixly123
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
 
-      # JPA/Hibernate configuration
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: true
 
-      # JWT configuration (add your actual values)
       JWT_SECRET_KEY: Prod_Fixly_2025_Super_Secret_Key_With_Special_Chars_!@
       JWT_EXPIRATION: 1800000
 
-      # Cloudinary configuration (add your actual values)
       CLOUDINARY_CLOUD_NAME: dzemlz1jb
       CLOUDINARY_API_KEY: 697511796148143
       CLOUDINARY_API_SECRET: 2GXtOlARXsy-rSOVV2TkqMYTT3Q
 
-      # Logging
       LOGGING_LEVEL_COM_FEMCODERS_FIXLY: DEBUG
       LOGGING_LEVEL_ORG_HIBERNATE_SQL: DEBUG
 
@@ -88,7 +76,6 @@ services:
       fixly-db:
         condition: service_healthy
 
-    # Health check using Spring Boot Actuator
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/actuator/health"]
       interval: 30s
@@ -99,17 +86,14 @@ services:
     networks:
       - fixly-network
 
-    # Add volume for logs (optional)
     volumes:
       - app_logs:/app/logs
 
-# Network configuration
 networks:
   fixly-network:
     driver: bridge
     name: fixly-network
 
-# Volume configuration
 volumes:
   mysql_data:
     name: fixly_mysql_data

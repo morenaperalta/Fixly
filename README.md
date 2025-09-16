@@ -280,9 +280,50 @@ open target/site/jacoco/index.html
 
 The project uses **GitHub Actions** for continuous integration.
 
-
+[![Test Pipeline](https://github.com/morenaperalta/Fixly/actions/workflows/test.yml/badge.svg)](https://github.com/morenaperalta/Fixly/actions/workflows/test.yml)
 [![Build Pipeline](https://github.com/morenaperalta/Fixly/actions/workflows/build.yml/badge.svg)](https://github.com/morenaperalta/Fixly/actions/workflows/build.yml)
 [![Release Pipeline](https://github.com/morenaperalta/Fixly/actions/workflows/release.yml/badge.svg)](https://github.com/morenaperalta/Fixly/actions/workflows/release.yml)
+
+This project implements a robust CI/CD pipeline using GitHub Actions to automate testing, Docker image building, and release management.
+
+## 📋 Workflow
+### 🔍 Test Pipeline (test.yml)
+**Trigger:** Automatically runs on every Pull Request targeting main
+
+**Purpose:** Quality assurance before code merging
+
+**Activities:**
+
+- Runs comprehensive test suite in Docker containers
+- Executes security scans and code analysis
+- Generates test coverage reports
+- Uses docker-compose-test.yml for test environment
+- Automatic cleanup after execution
+
+### 🔧 Build Pipeline (build.yml)
+**Trigger:** Automatically executes on every push to main branch
+
+**Purpose:** Build and publish development images
+
+**Activities:**
+
+- Docker image building and optimization
+- Pushing images to Docker Hub registry
+- Tagging images with commit SHAs
+- Generating build artifacts and reports
+
+### 🎯 Release Pipeline (release.yml)
+**Trigger:** Automatically activates when version tags are pushed (format: v*, e.g., v1.0.0)
+
+**Purpose:** Production-ready deployments
+
+**Activities:**
+
+- Builds versioned Docker images
+- Pushes to registry with semantic version tags
+- Runs full test suite pre-release
+- Tags images as latest for deployment
+- Optional GitHub release creation
 
 
 ## ➡️ Future implementations
