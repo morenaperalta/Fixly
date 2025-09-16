@@ -276,18 +276,15 @@ open target/site/jacoco/index.html
 ```
 
 
-## 🔄 CI Pipeline
+## 🔄 Workflow - Pipelines
 
 The project uses **GitHub Actions** for continuous integration.
 
-[![Test Pipeline](https://github.com/morenaperalta/Fixly/actions/workflows/test.yml/badge.svg)](https://github.com/morenaperalta/Fixly/actions/workflows/test.yml)
-[![Build Pipeline](https://github.com/morenaperalta/Fixly/actions/workflows/build.yml/badge.svg)](https://github.com/morenaperalta/Fixly/actions/workflows/build.yml)
-[![Release Pipeline](https://github.com/morenaperalta/Fixly/actions/workflows/release.yml/badge.svg)](https://github.com/morenaperalta/Fixly/actions/workflows/release.yml)
-
 This project implements a robust CI/CD pipeline using GitHub Actions to automate testing, Docker image building, and release management.
 
-## 📋 Workflow
 ### 🔍 Test Pipeline (test.yml)
+[![Test Pipeline](https://github.com/morenaperalta/Fixly/actions/workflows/test.yml/badge.svg)](https://github.com/morenaperalta/Fixly/actions/workflows/test.yml)
+
 **Trigger:** Automatically runs on every Pull Request targeting main
 
 **Purpose:** Quality assurance before code merging
@@ -301,6 +298,8 @@ This project implements a robust CI/CD pipeline using GitHub Actions to automate
 - Automatic cleanup after execution
 
 ### 🔧 Build Pipeline (build.yml)
+[![Build Pipeline](https://github.com/morenaperalta/Fixly/actions/workflows/build.yml/badge.svg)](https://github.com/morenaperalta/Fixly/actions/workflows/build.yml)
+
 **Trigger:** Automatically executes on every push to main branch
 
 **Purpose:** Build and publish development images
@@ -313,6 +312,8 @@ This project implements a robust CI/CD pipeline using GitHub Actions to automate
 - Generating build artifacts and reports
 
 ### 🎯 Release Pipeline (release.yml)
+[![Release Pipeline](https://github.com/morenaperalta/Fixly/actions/workflows/release.yml/badge.svg)](https://github.com/morenaperalta/Fixly/actions/workflows/release.yml)
+
 **Trigger:** Automatically activates when version tags are pushed (format: v*, e.g., v1.0.0)
 
 **Purpose:** Production-ready deployments
